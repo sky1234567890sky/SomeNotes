@@ -1,0 +1,84 @@
+ ========================》MainActivity.java
+ //创建适配器
+ public class Main2Activity extends AppCompatActivity {
+
+    private RecyclerView mRv;
+    private String s;
+    private MyAdapter myAdapter;
+    private int mposition;
+    private ArrayList<Student> list;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+        initView();
+    }
+
+    private void initView() {
+        mRv = (RecyclerView) findViewById(R.id.rv);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        mRv.setLayoutManager(manager);
+        //数据源
+        list = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            list.add(new Student(R.drawable.ic_launcher_background, i + "0", i + "0"));
+        }
+        myAdapter = new MyAdapter(list);
+        mRv.setAdapter(myAdapter);
+
+        //注册上下文菜单
+        registerForContextMenu(mRv);
+        //长按点击事件
+        myAdapter.setMyLongonclick(new MyAdapter.MyLongonclick() {
+            @Override
+            public void Longonclick(int position) {
+                mposition = position;
+            }
+        });
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(0,1,0,"查询");
+        menu.add(0,2,0,"删除");
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+                Student student = list.get(mposition);
+                Intent intent = new Intent(this,Selecte_activity.class);
+                intent.putExtra("student", student);
+                startActivity(intent);
+                break;
+            case 2:
+                list.remove(mposition);
+                myAdapter.notifyDataSetChanged();
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+}
+========================>mainActivity.xml
+ //定义一个接口
+    public interface MyLongonclick{
+        void Longonclick(int position);
+    }
+
+    public void setMyLongonclick(MyLongonclick myLongonclick){
+        this.myLongonclick = myLongonclick;
+    }
+    
+    //在OnBindViewHolder()方法里面判断并将position传过去；
+    
+    
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (myLongonclick!=null) {
+                        myLongonclick.Longonclick(position);
+                    }
+                    return false;
+                }
+            });

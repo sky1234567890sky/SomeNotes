@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/selector1" android:icon="@mipmap/a" android:title="ListView"></item>
+    <item android:id="@+id/selector2" android:icon="@mipmap/b" android:title="GridView"></item>
+</menu>

@@ -1,0 +1,251 @@
+===================================》
+//标题栏	ViewPager mainActivity.xml布局
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.along.day09_vp.MainActivity">
+
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tab"
+        >
+
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/vp"
+        />
+
+</LinearLayout>
+
+=========================================>mainActivity.java
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ViewPager vp = findViewById(R.id.vp);
+        TabLayout tab = findViewById(R.id.tab);
+
+        /*tab.addTab(tab.newTab().setText("标题1"));
+        tab.addTab(tab.newTab().setText("标题2"));
+        tab.addTab(tab.newTab().setText("标题3"));
+        tab.addTab(tab.newTab().setText("标题4"));
+*/
+        ArrayList<Fragment> list = new ArrayList<>();
+        //ArrayList<View> list = new ArrayList<>();
+        ArrayList<String> title = new ArrayList<>();
+        /*//布局加载器
+        View v1 = LayoutInflater.from(this).inflate(R.layout.layout_vp_1,null);
+        View v2 = LayoutInflater.from(this).inflate(R.layout.layout_vp_2,null);
+        View v3 = LayoutInflater.from(this).inflate(R.layout.layout_vp_3,null);
+        View v4 = LayoutInflater.from(this).inflate(R.layout.layout_vp_4,null);*/
+
+        MyFragment_1 myFragment_1 = new MyFragment_1();
+        MyFragment_2 myFragment_2 = new MyFragment_2();
+        MyFragment_3 myFragment_3 = new MyFragment_3();
+        MyFragment_4 myFragment_4 = new MyFragment_4();
+
+        list.add(myFragment_1);
+        list.add(myFragment_2);
+        list.add(myFragment_3);
+        list.add(myFragment_4);
+        /*list.add(v1);
+        list.add(v2);
+        list.add(v3);
+        list.add(v4);*/
+
+        title.add("首页");
+        title.add("列表");
+        title.add("信息");
+        title.add("发现");
+
+        //ViewPager vp = findViewById(R.id.vp);
+        //适配器
+        //MyAdapter myAdapter = new MyAdapter(list,title);
+        MyStateAdapter myFragmetAdapter = new MyStateAdapter(getSupportFragmentManager(), list,title);
+        vp.setAdapter(myFragmetAdapter);
+
+        //将vp 和 tab  结合
+        tab.setupWithViewPager(vp);
+
+    }
+
+===========================》
+//创建四个Viewpager或者四个Fragment以引用
+
+
+Fragment中通过getView().方法找Id;
+用geteContext();获取上下文并代替上下文；用getActivity();
+代替本类；
+
+
+
+
+
+
+===============      ================》底部有选择器
+
+在res/drawable文件夹下新建selector点击选择器：
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:drawable="@mipmap/icon_knowledge_hierarchy_selected" android:state_selected="true"></item>
+        <item android:drawable="@mipmap/icon_knowledge_hierarchy_not_selected" android:state_selected="false"></item>
+</selector>
+ @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+        initData();//设置 底部导航
+        initRg();//设置图标
+    }
+
+    private void initRg() {
+        for (int i = 0; i < title.size(); i++) {//遍历集合，根据集合的下标设置标题图片；使用加载布局写
+            TabLayout.Tab tabAt = mMainTab.getTabAt(i);
+            View inflate = LayoutInflater.from(this).inflate(R.layout.item_layout, null);
+            ImageView img  = inflate.findViewById(R.id.item_img);
+            TextView tv = inflate.findViewById(R.id.item_tv);
+            if ( i ==0){
+                img.setImageResource(R.drawable.select_1);//将选择器写入加载文件；
+            }else if(i==1){
+                //tv.setText(title.get(i));
+                img.setImageResource(R.drawable.selector_2);//将选择器写入加载文件；
+
+            }else if(i==2){
+                //tv.setText(title.get(i));
+                img.setImageResource(R.drawable.selector_3);//将选择器写入加载文件；
+
+            }else if(i==3){
+                //tv.setText(title.get(i));
+                img.setImageResource(R.drawable.selector_4);//将选择器写入加载文件；
+            }else{
+               // tv.setText(title.get(i));
+                img.setImageResource(R.drawable.selector_5);//将选择器写入加载文件；
+            }
+            tv.setText(title.get(i));
+            tabAt.setCustomView(inflate);
+        }
+
+        
+    }
+
+    private void initData() {
+        //创建Fagmentr碎片对象
+        BlankFragment1 blankFragment1 = new BlankFragment1();
+        BlankFragment2 blankFragment2 = new BlankFragment2();
+        BlankFragment3 blankFragment3 = new BlankFragment3();
+        BlankFragment4 blankFragment4 = new BlankFragment4();
+        BlankFragment5 blankFragment5 = new BlankFragment5();
+
+        ArrayList<Fragment> mFgLiat = new ArrayList<>();//将Fragnent碎片对象添加集合
+        title = new ArrayList<>();//将标题对象添加集合
+
+        mFgLiat.add(blankFragment1);
+        mFgLiat.add(blankFragment2);
+        mFgLiat.add(blankFragment3);
+        mFgLiat.add(blankFragment4);
+        mFgLiat.add(blankFragment5);
+
+        title.add("首页");
+        title.add("知识体系");
+        title.add("微信公众号");
+        title.add("导航");
+        title.add("项目");
+        //创建适配器；参数为 1，获取Fragment()管理器2，Fragemnt集合3，标题集合
+        MadapterMain madapterMain = new MadapterMain(getSupportFragmentManager(), mFgLiat, title);
+        mMainVp.setAdapter(madapterMain);//将viewPager的id绑定
+        mMainTab.setupWithViewPager(mMainVp);//将tablayout即标题栏与ViewPager关联
+
+        //给底部导航栏设置 图片跟 toolbar设置
+        mMainTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();//先获取Tablayout的索引
+                switchAt(position);//方法调用将Position作为参数传递
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+    }
+
+    private void switchAt(int position) {//遍历集合给设置Toolbar标题
+        if (position == 0){//根据索引为每个Fragmwent的标题修改
+            mMainTv.setText(title.get(0));
+        }else if (position ==1){
+            mMainTv.setText(title.get(1));
+        }else if (position ==2){
+            mMainTv.setText(title.get(2));
+        }else if (position ==3){
+            mMainTv.setText(title.get(3));
+        }else if (position ==4){
+            mMainTv.setText(title.get(4));
+        }
+
+    }
+
+    private void initView() {//初始化视图
+        mMainTv = (TextView) findViewById(R.id.main_tv);
+        mMainVp = (ViewPager) findViewById(R.id.main_vp);
+        mMainTab = (TabLayout) findViewById(R.id.main_tab);
+        mMainLl = (LinearLayout) findViewById(R.id.main_ll);
+        mMainDl = (DrawerLayout) findViewById(R.id.main_dl);
+        nv = findViewById(R.id.main_nv);
+        tool = findViewById(R.id.main_tool);
+
+        tool.setTitle("");//当在布局中设置标题时需要这样写，不然类名不会消失
+        setSupportActionBar(tool);//支持Toolbar
+        tool.setLogo(R.drawable.icon_wan);//为Toolbar设置图标
+
+        nv.setItemIconTintList(null);//解决侧滑菜单不现实的问题
+        ///创建一个侧滑开关
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mMainDl, tool, R.string.open, R.string.guanbi);
+        mMainDl.addDrawerListener(toggle);//抽屉导航点击
+        toggle.syncState();
+
+        //侧滑推主界面
+        mMainDl.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                //主界面设置 侧滑部分 的宽度
+                mMainLl.setX(nv.getWidth()*slideOffset);
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
+
+    }
+

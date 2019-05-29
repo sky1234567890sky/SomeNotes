@@ -1,0 +1,71 @@
+1.xml
+<FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar_container"
+            >
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tol"
+                android:background="@color/colorAccent"
+                />
+            <com.miguelcatalan.materialsearchview.MaterialSearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_view"
+                ></com.miguelcatalan.materialsearchview.MaterialSearchView>
+        </FrameLayout>
+2.menu资源下
+<item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_action_voice_search"
+        android:orderInCategory="100"
+        android:title="@string/abc_search_hint"
+        app:showAsAction="always"
+        ></item>
+3.重写方法,添加选项菜单.
+@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu,menu);
+        //找id
+        mSerachViewItem = menu.findItem(R.id.action_search);
+        //隐藏menu索索狂就不见了
+        mSerachViewItem.setVisible(false);
+        ///布局跟menu关联
+        search_view.setMenuItem(mSerachViewItem);
+        return super.onCreateOptionsMenu(menu);
+    }
+4.//显示碎片
+private int mLastType = 0 ;
+ private void switchFragment(int type) {
+        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+        Fragment fragment = list.get(type);
+        if (!fragment.isAdded()){
+            transaction.add(R.id.id_framelayout,fragment);
+        }
+        Fragment lastFragment = list.get(mLastType);
+        transaction.hide(lastFragment);
+        //显示碎片
+        transaction.show(fragment);
+        transaction.commit();
+
+        if (type == AppConstants.TYPE_WECHAT ||  type == AppConstants.TYPE_GANK){
+            mSerachViewItem.setVisible(true);
+        }else{
+            mSerachViewItem.setVisible(false);
+        }
+
+        mLastType = type;
+        tol.setTitle(title.get(type));
+
+    }
+//
+if (type == AppConstants.TYPE_WECHAT ||  type == AppConstants.TYPE_GANK){
+            mSerachViewItem.setVisible(true);
+        }else{
+            mSerachViewItem.setVisible(false);
+        }
+4.searchView的点击监听
+search_view.setOnQueryTextListener
+search_view.setOnSearchViewListener

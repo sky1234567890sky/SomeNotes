@@ -1,0 +1,109 @@
+主界面布局：
+   <android.support.v4.view.ViewPager
+        android:id="@+id/vp_views"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+====================》mainActivity.java
+public class MainActivity extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		 
+		ViewPager vp_views = (ViewPager) findViewById(R.id.vp_views);
+		List<Integer> mList = new ArrayList<Integer>();
+		mList.add(R.drawable.a);
+		mList.add(R.drawable.b);
+		mList.add(R.drawable.c);
+		mList.add(R.drawable.d);
+		mList.add(R.drawable.e);
+		ImageAdapter adapter = new ImageAdapter(this, mList);
+		vp_views.setAdapter(adapter);
+	}
+}
+==========================>创建适配器
+public class ImageAdapter extends PagerAdapter {
+	private Context mContext;
+	private List<Integer> mList;
+	public ImageAdapter(Context mContext, List<Integer> mList) {
+		super();
+		this.mContext = mContext;
+		this.mList = mList;
+	}
+	@Override
+	public int getCount() {
+		return mList.size();
+	}
+
+	@Override
+	public boolean isViewFromObject(View arg0, Object arg1) {
+		return arg0 == arg1;
+	}
+	// 相当于getView，用于加载item(子条目布局对象)
+	@Override
+	public Object instantiateItem(ViewGroup container, int position) {
+		// 加载子条目View对象
+		View view = View.inflate(mContext, R.layout.vp_item, null);
+		ImageView imageView = (ImageView)view.findViewById(R.id.img_id); 
+		if(position == mList.size()-1){
+			Button btn_start = (Button) view.findViewById(R.id.btn_start);
+			btn_start.setVisibility(View.VISIBLE);//显示按钮
+			btn_start.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					mContext.startActivity(new Intent(mContext, BActivity.class));
+					//关闭Activity页面
+					((Activity)mContext).finish();
+				}
+			});
+		}
+		
+		// 将集合中图片id设置给ImageView组件
+		imageView.setImageResource(mList.get(position));
+		// 将子条目View对象，添加到ViewGroup中
+		container.addView(view);
+
+		return view;
+	}
+
+	
+	//从ViewGroup中移除子条目
+	@Override
+	public void destroyItem(ViewGroup container, int position, Object object) {
+		// super.destroyItem(container, position, object);//删除，否则报错
+		container.removeView((View)object);
+	}
+==============================>适配器布局加载器引用
+    <ImageView android:id="@+id/img_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/a" />
+    <Button android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="进入主页"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

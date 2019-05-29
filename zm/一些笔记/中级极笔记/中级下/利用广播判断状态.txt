@@ -1,0 +1,120 @@
+============》MainActivity.java
+public class MainActivity extends AppCompatActivity {
+    private MyReceiver myReceiver;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+    //
+    @Override
+    protected void onResume() {
+        super.onResume();
+       /* // 网络状态的广播注册
+        myReceiver = new MyReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");// 添加网络状态的 Action
+        registerReceiver(myReceiver,intentFilter); // 注册广播*/
+
+        // 注册广播接受者java代码 电量
+        IntentFilter intentFilter = new IntentFilter(
+                Intent.ACTION_BATTERY_CHANGED);
+        myReceiver = new MyReceiver();
+        // 注册receiver
+        registerReceiver(myReceiver, intentFilter);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myReceiver);//注销广播
+    }
+}
+---------------------》MainActivity.xml
+
+
+===========MyReceiver============>自定义类继承BroadCastReceiver()并重写方法；
+public class MyReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+        Log.i("tag","===> 网络状态变化");
+        /*int netWorkStates = NetWorkUtil.getNetWorkStates(context);
+
+        switch (netWorkStates) {
+            case NetWorkUtil.TYPE_NONE:
+                //断网了
+                Log.i("tag","===> 断网了");
+                break;
+            case NetWorkUtil.TYPE_MOBILE:
+                //打开了移动网络
+                Log.i("tag","===> 打开了移动网络");
+                break;
+            case NetWorkUtil.TYPE_WIFI:
+                //打开了WIFI
+                Log.i("tag","===>打开了WIFI");
+                break;
+
+            default:
+                break;
+        }*/
+        if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
+            int level = intent.getIntExtra("level", 0);
+            Log.i("tag","电池电量为" + level + "%");
+            if (level < 15) {
+                Log.i("tag","===> 电池电量不足15%，请及时充电");
+            }
+        }
+===================>自定义类：
+public class NetWorkUtil {
+    public static final int TYPE_NONE = -1;
+    public static final int TYPE_MOBILE = 0;
+    public static final int TYPE_WIFI = 1;
+    private NetWorkUtil() {}
+
+    /**
+     * 获取网络状态
+     *
+     * @param context
+     * @return one of TYPE_NONE, TYPE_MOBILE, TYPE_WIFI
+     * @permission android.permission.ACCESS_NETWORK_STATE
+     */
+    public static final int getNetWorkStates(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+            return TYPE_NONE;//没网
+        }
+
+        int type = activeNetworkInfo.getType();
+        switch (type) {
+            case ConnectivityManager.TYPE_MOBILE:
+                return TYPE_MOBILE;//移动数据
+            case ConnectivityManager.TYPE_WIFI:
+                return TYPE_WIFI;//WIFI
+            default:
+                break;
+        }
+        return TYPE_NONE;
+    }
+}
+
+---------------------------》配置清单
+<!--
+        网络状态权限
+    -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+

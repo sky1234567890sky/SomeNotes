@@ -1,0 +1,165 @@
+XRecyclerView代码展示：
+================MainActivity布局java================================
+public class MainActivity extends AppCompatActivity {
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:// 刷新
+                    //改变集合的数据   1 清空数据   2 再加入数据
+                    // 刷新适配器
+                    //通知刷新完成
+                    mRecyclerView.refreshComplete();
+                break;
+                case 2: // 更多
+                    //改变集合的数据
+                    ArrayList<String> more = new ArrayList<>();
+                        for (int i=0;i<10;i++){
+                            more.add("更多  "+i);
+                        }
+                    myAdapter.addMore(more);
+                    // 刷新适配器
+                    //myAdapter.notifyDataSetChanged();
+                    //通知加载更多完成
+                    mRecyclerView.loadMoreComplete();
+                    break;
+            }
+        }
+    };
+    
+    
+    private XRecyclerView mRecyclerView;
+    private ArrayList<String> list;
+    private MyAdapter myAdapter;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        mRecyclerView = findViewById(R.id.xre);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        //刷新的效果
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.SquareSpin);
+
+        //初始化数据
+        list = new ArrayList<>();
+        for (int i=0;i<30;i++){
+            list.add("测试  "+i);
+        }
+        myAdapter = new MyAdapter(this, list);
+        mRecyclerView.setAdapter(myAdapter);
+
+        //监听加载更多和 刷新
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            //下拉刷新
+            @Override
+            public void onRefresh() {
+                //模拟耗时操作
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        handler.sendEmptyMessage(1);
+                    }
+                }.start();
+            }
+
+
+            // 上拉加载更多
+            @Override
+            public void onLoadMore() {
+                //模拟耗时操作
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                handler.sendEmptyMessage(2);
+            }
+        });
+    }
+}
+=================MainActivity的布局=================================>
+
+   <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/xre"
+        />
+
+=========================MyAdapter ===============》
+自定义适配器MyAdapter继承RecyclerView.Adapter:
+(先写一个类在写泛型里面的)内置了 自己写
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder>{
+
+    private Context context;
+    private ArrayList<String> list;
+
+    public MyAdapter(Context context, ArrayList<String> list) {
+        this.context = context;
+        this.list = list;
+    }
+
+    @Override
+    public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.layout_item,parent,false);
+        MyHolder holder = new MyHolder(v);
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(MyHolder holder, int position) {
+        holder.tv.setText(list.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    class MyHolder extends RecyclerView.ViewHolder{
+        TextView tv;
+        public MyHolder(View itemView) {
+            super(itemView);
+            tv = itemView.findViewById(R.id.tvitem);
+        }
+    }
+
+    //加载更多
+    public void addMore(ArrayList<String> more){
+        list.addAll(more);
+        notifyDataSetChanged();
+    }
+}
+-----------》
+在自定义一个XML文件：用于MyAdapter中的加载布局引用；
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:id="@+id/tvitem"
+        />
+</LinearLayout>
+
+
+
+
+
+
+
+
+

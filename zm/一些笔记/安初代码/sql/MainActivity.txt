@@ -1,0 +1,94 @@
+package com.example.day16_sqlite;
+
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+import android.widget.ListView;
+/*
+ * 1 创建一个自定义类  继承  SQLiteOpenHelper
+ * 2 重写 三个方法   1 构造     2 onCreate 初始化(只执行一次)  3 数据库升级(版本号(只大不小) 变更)
+ * 3 创建数据库 其实就是创建  SQLiteOpenHleper 对象   SQLiteOpenHleper是一个抽象类   创建的是 SQLiteOpenHleper 的子类对象
+ * 4 SQLiteOpenHleper 子类对象  拥有 对数据库 读写权限  方法调用
+ * 5 通过SQLiteOpenHleper 的 子类对象  得到读写权限      SQLiteDatabase db  可以对数据库进行  增 删 改  查  执行 sql 语句 的  方法
+ *    1 执行sql 1 rawQuery  2 execSQL  
+ *    2 执行 增  删  改  查   方法 
+ *    	 1   insert 
+ *       2   delete
+ *       3	 updata
+ *       4   query
+ *  解决问题：	
+ *  	1 确认  创库   创表成功
+ *  	2 把表导出来  看一下 是不是你要的数据表   和 对应的数据    
+ */
+public class MainActivity extends Activity implements OnItemLongClickListener{
+
+	private MyAdapter myAdapter;
+	private ArrayList<User> userAll;
+	private AlertDialog create;
+	private int index = 0;
+	
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		
+		ListView btn_create = (ListView) findViewById(R.id.btn_create);
+		
+		//数据源
+		NyDv nyDv = new NyDv(this, "my.db", null, 1);
+		userAll = nyDv.getUserAll();
+		//适配器
+		myAdapter = new MyAdapter();
+		//给成员变量赋值
+		myAdapter.setContext(this);
+		myAdapter.setUserAll(userAll);
+		
+		//绑定适配器
+		btn_create.setAdapter(myAdapter);
+		
+		btn_create.setOnItemLongClickListener(this);
+		
+		create = new AlertDialog.Builder(this).setTitle("是否要删除")
+			.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					
+					//删除数据库对应的数据
+					User user = userAll.get(index);
+					NyDv nyDv2 = new NyDv(MainActivity.this, "my.db", null, 1);
+					nyDv2.deleteUser(user);
+					
+					//删除  集合 
+					userAll.remove(index);
+					myAdapter.notifyDataSetChanged();//刷新
+				}
+			})
+			.setNegativeButton("取消", null).create();
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		
+		/*//ArrayList<User> userAll = myAdapter.getUserAll();
+		userAll.remove(position);
+		myAdapter.notifyDataSetChanged();*/
+		index = position;
+		create.show();
+		
+		return true;
+	}
+}

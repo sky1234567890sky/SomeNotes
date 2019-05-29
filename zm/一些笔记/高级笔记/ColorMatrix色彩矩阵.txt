@@ -1,0 +1,86 @@
+mainActivity主界面
+ColorMatrix = (Button) findViewById(R.id.ColorMatrix);
+        ColorMatrix.setOnClickListener(this);
+        g = (ImageView) findViewById(R.id.g);
+
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gaoyuanyuan1);
+        g.setImageBitmap(bitmap);
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.setSkew://倾斜
+                ImgUtils.bitmapSkew(baseBitmap, 0.2f, 0.2f, img2);
+                break;
+
+            case R.id.setTranslate:
+                ImgUtils.bitmapTranslate(baseBitmap, 200, 200, img2);
+                break;
+
+            case R.id.setRotate:
+                ImgUtils.bitmapRotate(baseBitmap, 180, img2);
+                break;
+            case R.id.setScale:
+                ImgUtils.bitmapScale(baseBitmap, 3.0f, 2.0f, img2);
+                break;
+            case R.id.ColorMatrix:
+                ImgUtils.ColorMatrix(bitmap,g);
+                break;
+        }
+    }
+}
+
+===================》工具类：
+   public static void ColorMatrix(Bitmap mBitmap,ImageView mIvNew){
+        Bitmap bitmap = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), mBitmap.getConfig());
+        
+//        //去掉红色
+//        float[] mMatrix = new float[]{
+//                0, 0, 0, 0, 0,//红色
+//                0, 1, 0, 0, 0,//绿色
+//                0, 0, 1, 0, 0,//蓝色
+//                0, 0, 0, 1, 0,//透明色
+//        };
+
+      //  2.去掉绿色效果:
+//        float[] mMatrix = new float[]{
+//                1, 0, 0, 0, 0,
+//                0, 0, 0, 0, 0,
+//                0, 0, 1, 0, 0,
+//                0, 0, 0, 1, 0,
+//        };
+      //  3.去掉蓝色效果:
+//        float[] mMatrix = new float[]{
+//                1, 0, 0, 0, 0,
+//                0, 1, 0, 0, 0,
+//                0, 0, 0, 0, 0,
+//                0, 0, 0, 1, 0,
+//        };
+        //4.灰度特效:
+//        float[] mMatrix = new float[]{
+//                0.33f, 0.59f, 0.11f, 0, 0,
+//                0.33f, 0.59f, 0.11f, 0, 0,
+//                0.33f, 0.59f, 0.11f, 0, 0,
+//                0, 0, 0, 1, 0,
+//        };
+//
+        //图像反转
+        float[] mMatrix = new float[]{
+                        -1, 0, 0, 1, 1,
+                0, -1, 0, 1, 1,
+                0, 0, -1, 1, 1,
+                0, 0, 0, 1, 0,
+        };
+        //色彩矩阵
+        ColorMatrix colorMatrix = new ColorMatrix(mMatrix);
+        //画板
+        Canvas canvas = new Canvas(bitmap);
+        //画笔
+        Paint paint = new Paint();
+        //给画笔设置颜色过滤器,里面使用色彩矩阵
+        paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+        //将mBitmap临摹到bitmap上,使用含有色彩矩阵的画笔
+        canvas.drawBitmap(mBitmap, 0, 0, paint);
+        mIvNew.setImageBitmap(bitmap);
+    }
+}

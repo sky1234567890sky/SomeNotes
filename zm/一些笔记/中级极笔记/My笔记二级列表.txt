@@ -1,0 +1,134 @@
+=======================二级列表==============MyAdapter=============》
+public class MyAdapter extends BaseExpandableListAdapter {
+    private final MainActivity mainActivity;
+    private final ArrayList<String> mGroup;
+    private final ArrayList<ArrayList<Student>> mItem;
+    public MyAdapter(MainActivity mainActivity, ArrayList<String> mGroup, ArrayList<ArrayList<Student>> mItem) {
+        this.mainActivity = mainActivity;
+        this.mGroup = mGroup;
+        this.mItem = mItem;
+    }
+    //父项数量
+    @Override
+    public int getGroupCount() {
+        return mGroup.size();
+    }
+    //子项数量
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return mItem.get(groupPosition).size();
+    }
+    //父项的数据
+    @Override
+    public Object getGroup(int groupPosition) {
+        return mGroup.get(groupPosition);
+    }
+    //子乡的数据
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return mItem.get(groupPosition).get(childPosition);
+    }
+    //父项数据的下标
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+    //子项数据的下标
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+    //组项和子项是否有固定的id，局部刷新
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+    //加载父项布局
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mainActivity).inflate(R.layout.item_el, null);
+        }
+        TextView tv = convertView.findViewById(R.id.main_tv);
+        tv.setText(mGroup.get(groupPosition));
+        return convertView;
+    }
+    //加载子项布局
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mainActivity).inflate(R.layout.item_el2, null, false);
+        }
+        TextView tv1 = convertView.findViewById(R.id.main2_tv);
+        tv1.setText(mItem.get(groupPosition).get(childPosition).getName());
+        return convertView;
+    }
+    //子项是否可选，子项的点击事件如果想要响应 必须返回true
+    ///还影响子项的分割线，返回true有分割线
+    //    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+        =========MainActivity========>
+         private ExpandableListView mElList;
+    private ArrayList<String> mGroup;
+    private ArrayList<ArrayList<Student>> mItem;
+    private MyAdapter adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();//找到id
+        initData();//列表
+    }
+    private void initData() {
+        mGroup = new ArrayList<>();//一级列表
+        mGroup .add("法师");
+        mGroup.add("射手");
+        mGroup.add("坦克");
+        mGroup.add("辅助");
+
+        ArrayList<Student> list1 = new ArrayList<>();
+
+        list1.add(new Student("妲己",R.drawable.baobao1));
+        list1.add(new Student("大桥",R.drawable.chenyixun));
+        list1.add(new Student("甄姬",R.drawable.chichangxu));
+        list1.add(new Student("钟馗",R.drawable.ic_launcher_background));
+
+        ArrayList<Student> list2 = new ArrayList<>();
+        list2.add(new Student("后羿",R.drawable.baobao1));
+        list2.add(new Student("后羿",R.drawable.chenyixun));
+        list2.add(new Student("后羿",R.drawable.chichangxu));
+        list2.add(new Student("后羿",R.drawable.ic_launcher_background));
+        ArrayList<Student> list3 = new ArrayList<>();
+        list3.add(new Student("东皇",R.drawable.baobao1));
+        list3.add(new Student("对边",R.drawable.baobao1));
+        ArrayList<Student> list4 = new ArrayList<>();
+        list4.add(new Student("庄周",R.drawable.baobao1));
+        list4.add(new Student("妲己",R.drawable.baobao1));
+        mItem = new ArrayList<>();//二级列表
+
+        mItem.add(list1);
+        mItem.add(list2);
+        mItem.add(list3);
+        mItem.add(list4);
+        adapter = new MyAdapter(this,mGroup,mItem);
+        mElList.setAdapter(adapter);
+
+    }
+    private void initView() {
+        mElList = (ExpandableListView) findViewById(R.id.el_list);
+    }
+        
+        =========>
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+}

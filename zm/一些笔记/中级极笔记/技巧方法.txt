@@ -1,0 +1,27 @@
+
+在Fragment中将线程中的解析的直接添加到适配器
+getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        fragmentAdapter.addData(datas);
+                    }
+                });
+======》加载轮播图
+ if (itemViewType ==1)
+ MyHolderBanner banner = (MyHolderBanner) holder;
+           // banner.banner.setImageLoader(new MyLoader());//加载图片
+            banner.banner.setImages(list_data);
+            banner.banner.setImageLoader(new ImageLoader() {
+                @Override
+                public void displayImage(Context context, Object path, ImageView imageView) {
+                    Glide.with(context).load(list_data.get(position).getImagePath()).into(imageView);
+                }
+            }).start();
+        }
+==========》          
+RecyclerView.Adapter适配器；
+       重写onCreateViewHolder（）方法  
+            onBindViewHolder（）绑定数据
+                getItemCount（）
+                判断时用此方法getItemViewType（）；
+                

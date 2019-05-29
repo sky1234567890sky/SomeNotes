@@ -1,0 +1,27 @@
+//实体类
+        final Student student = new Student(Long.valueOf( position), title, fm_play, excerpt);
+        //初始化页面时的状态（判断id是否重复的查询）
+        final Student student1 = DbUtils.getDbUtils().queryAll(student);
+        if (student1!=null){//
+            holder.btn1.setText("取消");
+        }else{
+            holder.btn1.setText("关注");
+        }
+        holder.btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //id不重复查询
+                Student student2 = DbUtils.getDbUtils().queryAll(student);
+                if (student2==null) {//没有添加
+                    holder.btn1.setText("关注");
+                    DbUtils.getDbUtils().insertAll(student);
+                    List<Student> querylist = DbUtils.getDbUtils().querylist();
+                    Log.i("abc", "查询:=============> " + querylist.size());
+                    holder.btn1.setText("取消");
+                }else{
+                    holder.btn1.setText("取消");
+                    DbUtils.getDbUtils().deleteAll(Long.valueOf( position));
+                    List<Student> querylist = DbUtils.getDbUtils().querylist();
+                    Log.i("abc", "删除:=======> "+querylist.size());
+                    holder.btn1.setText("关注");
+                }

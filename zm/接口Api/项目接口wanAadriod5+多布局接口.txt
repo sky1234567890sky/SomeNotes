@@ -1,0 +1,145 @@
+//环信官网
+https://www.easemob.com/
+
+//极光推送
+https://docs.jiguang.cn/jpush/client/Android/android_sdk/
+
+友盟 第三方分享
+//https://mobile.umeng.com/platform/config/apps/create
+//Demo
+5cd120fb570df3acc7000289
+
+//工具类网址
+https://github.com/AbrahamCaiJin/CommonUtilLibrary
+//依赖的版本
+https://mvnrepository.com/
+
+
+//代码下载
+//https://github.com/codeestX/GeekNews
+//拉代码
+https://github.com/lizhengjunkijojo/TestAbc.git
+
+文件下载,这里我们统一下载一个apk文件,下载完成后进行安装,接口:
+http://cdn.banmi.com/banmiapp/apk/banmi_330.apk
+
+String downLoad = "http://cdn.banmi.com/banmiapp/";
+    @GET("apk/banmi_330.apk")
+    Observable<ResponseBody>download();
+============================================================================》
+//上传文件
+http://yun918.cn/study/public/file_upload.php
+
+上传文件的MediaType
+"application/octet-stream"
+
+返回结果
+{"code":200,"res":"上传文件成功","data":{"url":"http://yun918.cn/study/public/uploadfiles/123/944365-ee747d1e331ed5a4.png"}}
+
+参数
+{
+key:“文件上传的目录”;  //可以直接设置一个上传文件目录的名称
+uid:“41”;  //登录用户的uid
+file:”MutilPartBody文件对象” //包含文件名字和内容 
+}
+ 
+请求方式
+post （get暂时无法通过网页测试） 
+code 返回的状态码  200表示成功
+
+  String URLupdata = "http://yun918.cn/study/public/";
+    @Multipart
+    @POST("file_upload.php")
+    Observable<UploadImage>get(@Part("key") RequestBody key, @Part MultipartBody.Part body);
+========================================================================================》
+
+
+新实时段子
+https://api.apiopen.top/getJoke?page=1&count=2&type=video
+
+
+https://www.93.gov.cn/93app/data.do?channelId=0&startNum=0
+
+文件下载,这里我们统一下载一个apk文件,下载完成后进行安装,接口:
+https://cdn.banmi.com/banmiapp/apk/banmi_330.apk
+
+//选择的价格数字
+https://www.qubaobei.com/ios/cf/dish_list.php?page=1&stage_id=1&limit=20
+
+1.1 首页文章列表
+http://www.wanandroid.com/article/list/0/json
+方法：GET
+参数：页码，拼接在连接中，从0开始。
+1.2 首页banner
+https://www.wanandroid.com/banner/json
+方法：GET
+参数：无
+2.1 体系数据
+https://www.wanandroid.com/tree/json
+方法：GET
+参数：无
+2.2 知识体系下的文章    
+https://www.wanandroid.com/article/list/0/json?cid=60
+方法：GET
+参数：
+	cid 分类的id，上述二级目录的id
+	页码：拼接在链接上，从0开始。
+	3.1 导航数据
+https://www.wanandroid.com/navi/json
+方法：GET
+参数：无
+4.1 项目分类4.2 项目列表数据
+https://www.wanandroid.com/project/tree/json
+某一个分类下项目列表数据，分页展示
+https://www.wanandroid.com/project/list/1/json?cid=294
+方法：GET
+参数：
+	cid 分类的id，上面项目分类接口
+	页码：拼接在链接中，从1开始。
+	5.1 登录
+https://www.wanandroid.com/user/login
+
+方法：POST
+参数：
+	username，password
+	5.2 注册
+https://www.wanandroid.com/user/register
+
+方法：POST
+参数
+	username,password,repassword
+	5.3 退出
+https://www.wanandroid.com/user/logout/json
+方法：GET
+6.1 收藏文章列表
+http://www.wanandroid.com/lg/collect/list/0/json
+方法：GET
+参数： 页码：拼接在链接中，从0开始。
+6.2 收藏站内文章
+https://www.wanandroid.com/lg/collect/1165/json
+
+方法：POST
+参数： 文章id，拼接在链接中。
+注意链接中的数字，为需要收藏的id.
+
+6.3 收藏站外文章
+http://www.wanandroid.com/lg/collect/add/json
+
+方法：POST
+参数：
+	title，author，link
+	6.4.1 文章列表
+http://www.wanandroid.com/lg/uncollect_originId/2333/json
+
+方法：POST
+参数：
+	id:拼接在链接上
+	6.4.2 我的收藏页面（该页面包含自己录入的内容）
+http://www.wanandroid.com/lg/uncollect/2805/json
+
+方法：POST
+参数：
+	id:拼接在链接上
+	
+	
+	18519327770

@@ -1,0 +1,36 @@
+Retrofit2简单的说就是一个网络请求的适配器，它将一个基本的Java接口通过动态代理的方式翻译成一个HTTP请求，并通过OkHttp去发送请求。
+此外它还具有强大的可扩展性，支持各种格式转换以及RxJava。本文基于Retrofit2解析。
+（1）Retrofit2基本使用
+先定义一个PersonalProtocol的java接口
+
+
+
+GreenDao数据库；
+2. GreenDao的介绍
+简单的GreenDao的介绍，闲麻烦的可以直接跳到GreenDao使用开始看。
+（1）什么是GreenDao？
+GreenDAO是一个开源的Android ORM(“对象/关系映射”)，通过ORM（称为“对象/关系映射”），在我们数据库开发过程中节省了开发时间！。
+（2）GreenDao的作用？
+通过GreenDao，我们可以更快速的操作数据库，我们可以使用简单的面相对象的API来存储，更新，删除和查询Java对象。
+（3）GreenDao的优缺点？
+高性能
+易于使用的强大API，涵盖关系和连接；
+最小的内存消耗;
+小库大小（<100KB）以保持较低的构建时间并避免65k方法限制;
+数据库加密：greenDAO支持SQLCipher，以确保用户的数据安全;
+（4）GreenDao的使用
+GreenDao的核心类有三个：分别是DaoMaster,DaoSession,XXXDao，这三个类都会自动创建，无需自己编写创建！
+DaoMaster:：DaoMaster保存数据库对象（SQLiteDatabase）并管理特定模式的DAO类（而不是对象）。它有静态方法来创建表或删除它们。它的内部类OpenHelper和DevOpenHelper是SQLiteOpenHelper实现，它们在SQLite数据库中创建模式。
+DaoSession：管理特定模式的所有可用DAO对象，您可以使用其中一个getter方法获取该对象。DaoSession还提供了一些通用的持久性方法，如实体的插入，加载，更新，刷新和删除。
+XXXDao：数据访问对象（DAO）持久存在并查询实体。对于每个实体，greenDAO生成DAO。它具有比DaoSession更多的持久性方法，例如：count，loadAll和insertInTx。
+Entities ：可持久化对象。通常, 实体对象代表一个数据库行使用标准 Java 属性(如一个POJO 或 JavaBean )。
+（5）1. 导入Gradle插件和Dao代码生成
+要在Android项目中使用GreenDao，您需要添加GreenDao Gradle插件并添加GreenDao库：
+    导入插件
+2，配置相关依赖
+3,配置数据库相关信息;配置完成，在Android Studio中使用Build> Make Project，重写build项目，GreenDao集成完成！
+4, (1)创建存储对象实体类
+使用GreenDao存储数据只需要在存储数据类前面声明@Entity注解就让GreenDao为其生成必要的代码：
+(2) GreenDao初始化
+我们可以在Application中维持一个全局的会话。我们在Applicaiton进行数据库的初始化操作：
+(3)使用GreenDao实现增删改查

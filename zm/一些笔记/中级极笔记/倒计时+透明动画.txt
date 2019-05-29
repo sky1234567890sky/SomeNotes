@@ -1,0 +1,49 @@
+public class MainActivity extends AppCompatActivity {
+    private int in=5;
+    Handler hand = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (in>0){
+                in--;
+                mOneTime.setText("还剩"+in+"秒");
+            }else{
+                timer.cancel();
+                startActivity(new Intent(MainActivity.this,BActivity.class));
+            }
+        }
+    };
+
+    private ImageView mOneImg;
+    /**
+     * 还剩5秒
+     */
+    private TextView mOneTime;
+    private Timer timer;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+        //倒计时
+        mOneTime.setText("还剩"+in+"秒");
+        TimerTask timerTask = new TimerTask(){
+            @Override
+            public void run() {
+                hand.sendEmptyMessage(1);
+            }
+        };
+        timer = new Timer();
+        timer.schedule(timerTask,1000,1000);
+    }
+
+    private void initView() {
+        mOneImg = (ImageView) findViewById(R.id.one_img);
+        mOneTime = (TextView) findViewById(R.id.one_time);
+        //透明度变化动画
+        AlphaAnimation animation = new AlphaAnimation(1.0f, 0.5f);
+        animation.setDuration(3000);//执行时长
+        animation.setFillAfter(false);//保持动画完成后的状态
+        mOneImg.startAnimation(animation);//启动动画
+    }

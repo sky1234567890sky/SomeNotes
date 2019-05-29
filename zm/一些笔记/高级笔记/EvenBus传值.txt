@@ -1,0 +1,71 @@
+=====================================》A页面
+ @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+        ButterKnife.bind(this);
+//注册
+        EventBus.getDefault().register(this);
+    }
+    //发送数据
+    @OnClick(R.id.btn)
+    public void onViewClicked() {
+        //EventBus.getDefault().post("今天星期一");//发送普通数据
+        //发送粘性事件
+        EventBus.getDefault().postSticky("粘性事件");
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+    //开页面
+    @OnClick(R.id.btn2)
+    public void onBtnClicked() {
+        Intent intent = new Intent(Main2Activity.this, Main3Activity.class);
+        startActivity(intent);
+    }
+    //回传
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getData(String msg) {
+        if (msg != null) {
+            tv.setText(msg);
+            Log.i(TAG, "数据: "+msg);
+        }
+
+    }
+    ==========================》B页面
+    //回传也要注册和销毁订阅
+     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main3);
+        ButterKnife.bind(this);
+    //注册订阅
+        EventBus.getDefault().register(this);
+    }
+    //方法
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void getDatas(String msg){
+        if (msg!=null){
+            tv.setText(msg);
+            //移除粘性事件
+            String stickyEvent = EventBus.getDefault().getStickyEvent(String.class);
+            if (stickyEvent!=null){
+                EventBus.getDefault().removeStickyEvent(stickyEvent);
+            }
+            Log.i(TAG, "数据: "+msg);
+        }
+    }
+
+    @OnClick(R.id.btn)
+    public void onViewClicked() {
+            //回传
+        EventBus.getDefault().post("回传");
+    }
+    //注销
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }

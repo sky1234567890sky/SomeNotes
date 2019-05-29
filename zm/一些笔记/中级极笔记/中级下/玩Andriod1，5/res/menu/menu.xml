@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/wan" android:title="@string/wan" android:icon="@drawable/home_highlight" android:checkable="true"></item>
+    <item android:id="@+id/music" android:title="@string/music" android:icon="@drawable/icon_music"
+        android:checkable="true"
+        ></item>
+    <item android:id="@+id/video" android:title="@string/video" android:icon="@drawable/icon_video"
+        android:checkable="true"
+        ></item>
+    <item android:id="@+id/setting" android:title="@string/setting" android:icon="@drawable/icon_settings"
+        android:checkable="true"
+        ></item>
+</menu>

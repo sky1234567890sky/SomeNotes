@@ -1,0 +1,79 @@
+1、知乎：
+http://news-at.zhihu.com/api/4/
+没有数据
+1),启动界面图片
+start-image/{res}  参数：1080*1776
+
+2)最新日报
+news/latest
+3)往期日报
+news/before/{date}   日期格式(20181206) 
+4)主题日报 
+themes   无数据
+5)专栏日报
+sections 
+6)专栏日报详情
+section/{id} 参数id上一个接口中
+7热门日报
+news/hot
+8）日报详情
+news/{news_id}参数news_id上一个接口中
+9)日报额外信息
+story-extra/{news_id}
+10)日报长评论
+story/{news_id}/long-comments
+11)日报段评论
+story/{news_id}/short-comments
+
+2、微信精选
+http://api.tianapi.com/
+1)wxnew(http://api.tianapi.com/wxnew/?key=52b7ec3471ac3bec6846577e79f20e4c&num=10&page=1)
+参数：key=52b7ec3471ac3bec6846577e79f20e4c
+          num(每页的数量)
+          page(页码)
+
+微信精选列表(搜索)
+1)wxnew(http://api.tianapi.com/wxnew/?key=52b7ec3471ac3bec6846577e79f20e4c&num=10&page=1)
+参数：key=52b7ec3471ac3bec6846577e79f20e4c
+          num(每页的数量)
+          page(页码)
+          word(关键字检索)
+
+3干活集中营
+http://gank.io/api/
+1)技术文章列表
+    数据类型(tech)：Android | iOS | 休息视频 | 福利 | 拓展资源 | 前端 | 瞎推荐 | App|all
+    请求个数(num)： 数字，大于0
+    第几页(page)：数字，大于0
+data/{tech}/{num}/{page}
+
+2)妹子列表
+http://gank.io/api/data/福利/10/1
+
+3)随机妹子列表
+http://gank.io/api/random/data/Android/20
+
+4)搜索稀土掘金
+http://gank.io/api/search/query/{搜索字段}/category/Android/count/10/page/1
+注：
+    category 后面可接受参数 all | Android | iOS | 休息视频 | 福利 | 拓展资源 | 前端 | 瞎推荐 | App
+    count 最大 50
+
+
+4、V2EX
+https://www.v2ex.com/
+1)获取节点信息
+/api/nodes/show.json
+主页面的列表展示
+参数："tech", "creative", "play", "apple", "jobs", "deals", "city", "qna", "hot", "all", "r2"
+
+获取主题回复头信息
+https://www.v2ex.com/api/topics/show.json?id=516865
+
+
+获取主题回复详情内容
+https://www.v2ex.com/api/replies/show.json?topic_id=516865
+
+获取列表数据展示
+/api/topics/show.json?node_name=
+参数在XML文件中

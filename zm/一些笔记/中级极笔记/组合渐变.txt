@@ -1,0 +1,48 @@
+=========》
+在res文件夹下新建 anim文件 ，再在anim文件下新建scale.xml组合渐变
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--缩放渐变-->
+    <scale android:fromXScale="0.2" android:fromYScale="0.2"
+        android:toXScale="1.5" android:toYScale="1.5"
+        android:pivotX="50%" android:pivotY="50%"
+        />
+    <!--旋转渐变-->
+    <rotate android:fromDegrees="0" android:toDegrees="360"
+         >
+    </rotate>
+    <!--位移渐变-->
+         <!--<translate  -->
+             <!--android: android:fromXDelta="0" fromYDelta="0"-->
+             <!--android:toXDelta="320" android:toYDelta="0"-->
+             <!--&gt;-->
+         <!--</translate>-->
+
+    <alpha android:toAlpha="1" android:fromAlpha="0.5"
+        >
+
+    </alpha>
+</set>
+===============》java代码中：
+      //创建动画对象 并传入 设置的 动画效果的xml文件
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.scale);
+        animation.setDuration(3000);//设置时长
+        animation.setFillAfter(true);//设置状态是否为执行完后的状态
+        T3_tv.startAnimation(animation);//启动
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

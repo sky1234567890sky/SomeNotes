@@ -1,0 +1,74 @@
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private ImageView img;
+    private Button btn;
+    private String TAG = MainActivity.class.getName();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+    }
+    private void initView() {
+        img = (ImageView) findViewById(R.id.img);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.a);
+//最后一个参数是BitmapFactory.Options,bitmap的高效处理就是通过BitmapFactory.Options来设置的
+        img.setImageBitmap(bitmap);
+        
+        btn = (Button) findViewById(R.id.btn);
+        btn.setOnClickListener(this);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn:
+                init();
+                break;
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void init() {
+        //原图片
+        int width = img.getWidth();
+        int height = img.getHeight();
+        Log.i(TAG, "原图片大小宽====》: "+width);
+        Log.i(TAG, "原图片大小高====》: "+height);
+        //2,输出原图质量大小
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.a);
+        Log.i(TAG, "输出原图质量大小，二次采样: "+bitmap.getAllocationByteCount());
+        //3.获取图片的宽高
+        /*BitmapFactory.Options的作用：
+1.防止内存溢出；
+2.节省内存开销；
+3.系统更流畅；*/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.a, options);
+        int outWidth = options.outWidth;
+        int outHeight = options.outHeight;
+        Log.i(TAG, "获取图片宽===》: "+outWidth+"，获取图片高====》:"+outHeight);
+        //3.、计算比例
+        float v = outWidth * 1.0f / width;
+        float v1 = outHeight * 1.f / height;
+        //4.获取最大值
+        float max = Math.max(v, v1);
+        int ceil = (int) Math.ceil(max);
+        Log.i(TAG, "获取最大值=====>: "+ceil);
+        //5,采样
+
+        options.inJustDecodeBounds=false;
+
+        options.inSampleSize = ceil;
+
+        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.a, options);
+
+        Log.i(TAG, "二次采样bitmap的大小: "+bitmap2.getAllocationByteCount());
+
+        img.setImageBitmap(bitmap2);
+
+
+
+
+
+    }
+}

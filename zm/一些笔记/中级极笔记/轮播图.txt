@@ -1,0 +1,119 @@
+
+
+public class MainActivity extends AppCompatActivity implements OnBannerListener {
+
+    //初始化  轮播数据   图片网址    图片名称
+    ArrayList<String> titles = new ArrayList<>();
+    ArrayList<Integer> imagePath = new ArrayList<>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        titles.add("图片1");
+        titles.add("图片2");
+        titles.add("图片3");
+
+        imagePath.add(R.mipmap.ic_launcher);
+        imagePath.add(R.mipmap.ic_launcher);
+        imagePath.add(R.mipmap.ic_launcher);
+
+
+        Banner banner = findViewById(R.id.banner);
+    //设置样式，里面有很多种样式可以自己都看看效果
+        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
+        //设置图片加载器
+        banner.setImageLoader(new MyLoder());
+        //设置轮播的动画效果,里面有很多种特效,可以都看看效果。
+        banner.setBannerAnimation(Transformer.ZoomOutSlide);
+        //轮播图片的文字
+        banner.setBannerTitles(titles);
+        //设置轮播间隔时间
+        banner.setDelayTime(3000);
+        //设置是否为自动轮播，默认是true
+        banner.isAutoPlay(true);
+        //设置指示器的位置，小点点，居中显示
+        banner.setIndicatorGravity(BannerConfig.CENTER);
+        //设置图片加载地址（网址  本地地址）
+        banner.setImages(imagePath);
+        //轮播图的监听
+        banner.setOnBannerListener(this);
+        //开始调用的方法，启动轮播图。
+        banner.start();
+    }
+    // 点击轮播图监听
+    @Override
+    public void OnBannerClick(int position) {
+
+        Toast.makeText(MainActivity.this,"你点击了第"+(position+1)+"张图片",Toast.LENGTH_LONG).show();
+        //Integer integer = imagePath.get(position);
+
+    }
+    // 图片加载
+    class MyLoder extends ImageLoader{
+
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+          Glide.with(MainActivity.this).load(path).into(imageView);
+
+        }
+    }
+
+}
+
+==========================》
+  <com.youth.banner.Banner
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        />
+        
+        //解析网络轮播图      
+        public class Banner_Activity extends AppCompatActivity {
+    private Banner img;
+    private TextView tv;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_banner_);
+        img = findViewById(R.id.img);
+        tv = findViewById(R.id.tv);
+
+//        https://ws1.sinaimg.cn/large/0065oQSqly1g0ajj4h6ndj30sg11xdmj.jpg
+//        https://ws1.sinaimg.cn/large/0065oQSqly1g04lsmmadlj31221vowz7.jpg
+//        https://ws1.sinaimg.cn/large/0065oQSqgy1fze94uew3jj30qo10cdka.jpg
+//        https://ws1.sinaimg.cn/large/0065oQSqly1fytdr77urlj30sg10najf.jpg
+//        https://ws1.sinaimg.cn/large/0065oQSqly1fymj13tnjmj30r60zf79k.jpg
+
+        final ArrayList<String> list = new ArrayList<>();
+
+        list.add("https://ws1.sinaimg.cn/large/0065oQSqly1g0ajj4h6ndj30sg11xdmj.jpg");
+        list.add("https://ws1.sinaimg.cn/large/0065oQSqly1g04lsmmadlj31221vowz7.jpg");
+        list.add("https://ws1.sinaimg.cn/large/0065oQSqgy1fze94uew3jj30qo10cdka.jpg");
+        list.add("https://ws1.sinaimg.cn/large/0065oQSqly1fytdr77urlj30sg10najf.jpg");
+        list.add("https://ws1.sinaimg.cn/large/0065oQSqly1fymj13tnjmj30r60zf79k.jpg");
+
+        img.setImages(list);
+        //img.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
+        img.setImageLoader(new ImageLoader() {
+            @Override
+            public void displayImage(Context context, Object path, ImageView imageView) {
+                Glide.with(context).load((String)path).into(imageView);
+            }
+        });
+        img.start();
+
+        RotateAnimation rotateAnimation = new RotateAnimation(//旋转
+                0,720,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,Animation.RELATIVE_TO_SELF,
+                0.5f
+        );
+        rotateAnimation.setFillAfter(true);
+        rotateAnimation.setDuration(3000);
+        tv.startAnimation(rotateAnimation);
+        img.startAnimation(rotateAnimation);
+    }
+}

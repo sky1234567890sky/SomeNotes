@@ -1,0 +1,280 @@
+在A中
+
+
+
+
+
+
+
+=======================》mainActivity.xml
+<android.support.v7.widget.Toolbar
+        android:id="@+id/tool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
+    </android.support.design.widget.TabLayout>
+
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tool"
+        android:layout_above="@id/tab"
+        >
+    </FrameLayout>
+
+===========》MainActivity.java
+
+    private void initFragment() {
+
+        fragment_a = new Fragment_A();
+        fragment_b = new Fragment_B();
+        // 获得管理
+        FragmentManager manager = getSupportFragmentManager();
+        //开启事物
+        FragmentTransaction transaction = manager.beginTransaction();
+        // 添加  fragment
+        transaction.add(R.id.frame,fragment_a);
+        transaction.add(R.id.frame,fragment_b);
+        //  设置显示隐藏
+        transaction.show(fragment_a).hide(fragment_b);
+        // 提交事务
+        transaction.commit();
+    }
+
+    private void initView() {
+
+        tool = findViewById(R.id.tool);
+        tool.setTitle("标题");
+        setSupportActionBar(tool);
+
+        TabLayout tab = findViewById(R.id.tab);
+
+        tab.addTab(tab.newTab().setText("首页1"));
+        tab.addTab(tab.newTab().setText("首页2"));
+
+        tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                int position = tab.getPosition();
+                Log.i("tag","===> "+position);
+                if(position==0){
+                    // 首页1
+                    getSupportFragmentManager().beginTransaction().show(fragment_a).hide(fragment_b).commit();
+                }else{
+                    // 首页2
+                    getSupportFragmentManager().beginTransaction().show(fragment_b).hide(fragment_a).commit();
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+    }
+
+    public Fragment_A getFragment_a() {
+        return fragment_a;
+    }
+
+    public Fragment_B getFragment_b() {
+        return fragment_b;
+    }
+}
+==================================================>Fragment_A.java
+public class Fragment_A extends Fragment{
+    private ArrayList<Info> list_a;
+    private MyAdapter myAdapter;
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.layout_fragment_a,container,false);
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+       initView();
+    }
+    private void initView() {
+
+        RecyclerView rl_a = getView().findViewById(R.id.rl_a);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        rl_a.setLayoutManager(linearLayoutManager);
+        //数据源
+        list_a = new ArrayList<>();
+        for (int i=0;i<20;i++){
+            list_a.add(new Info("fragment_a_"+i,""+i));
+        }
+        //创建适配器
+        myAdapter = new MyAdapter(list_a,getActivity() );
+        //绑定适配器
+        rl_a.setAdapter(myAdapter);
+
+        myAdapter.setMyOnclik(new MyAdapter.MyOnclik() {
+            @Override
+            public void myOnClikPosition(int position) {
+                // 记录要 移除的数据
+                Info info = list_a.get(position);
+                //点那个  list 就  移除那个
+                list_a.remove(position);
+                myAdapter.notifyDataSetChanged();
+                // 把记录的 传给 b
+                    // 1 获得 actvity 对象
+                MainActivity m = (MainActivity) getActivity();
+                // 2 获得  要传递的 fragment_b 对象
+                Fragment_B fragment_b = m.getFragment_b();
+                // 3   fragment_b 对象  调用 fragment_b 的方法
+                fragment_b.setInfo(info);
+            }
+        });
+    }
+
+    public void setInfo(Info info ){
+        // 传递过来的数据添加 给集合
+        list_a.add(info);
+        // 刷新
+        myAdapter.notifyDataSetChanged();
+    }
+}
+-------------------->
+
+=============================>Fragment_B.java
+public class Fragment_B extends Fragment{
+
+    private ArrayList<Info> list_b;
+    private MyAdapter myAdapter;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.layout_fragment_b,container,false);
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initView();
+
+    }
+
+    private void initView() {
+        RecyclerView rl_b = getView().findViewById(R.id.rl_b);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        rl_b.setLayoutManager(linearLayoutManager);
+        ///数据源
+        list_b = new ArrayList<>();
+        for (int i=0;i<20;i++){
+            list_b.add(new Info("fragment_b_"+i,""+i));
+        }
+        //创建适配器
+        myAdapter = new MyAdapter(list_b,getActivity() );
+        //绑定适配器
+        rl_b.setAdapter(myAdapter);
+        // 点击事件
+        myAdapter.setMyOnclik(new MyAdapter.MyOnclik() {
+            @Override
+            public void myOnClikPosition(int position) {
+                // 记录要 移除的数据
+                Info info = list_b.get(position);
+                //点那个  list 就  移除那个
+                list_b.remove(position);
+                myAdapter.notifyDataSetChanged();
+                // 把记录的 传给 a
+                // 1 获得 actvity 对象
+                MainActivity m = (MainActivity) getActivity();
+                // 2 获得  要传递的 fragment_b 对象
+                Fragment_A fragment_a = m.getFragment_a();
+                // 3   fragment_b 对象  调用 fragment_b 的方法
+                fragment_a.setInfo(info);
+            }
+        });
+    }
+    public void setInfo(Info info ){
+        // 传递过来的数据添加 给集合
+        list_b.add(info);
+        // 刷新
+        myAdapter.notifyDataSetChanged();
+    }
+}
+
+==========================》适配器
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder>{
+    ArrayList<Info> list;
+    Context context;
+
+    public MyAdapter(ArrayList<Info> list, Context context) {
+        this.list = list;
+        this.context = context;
+    }
+
+    @Override
+    public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_item,parent,false);
+        MyHolder myHolder = new MyHolder(view);
+        return myHolder;
+    }
+    @Override
+    public void onBindViewHolder(MyHolder holder, final int position) {
+        holder.textage.setText(list.get(position).getAge());
+        holder.textname.setText(list.get(position).getName());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(myOnclik!=null){
+                    myOnclik.myOnClikPosition(position);
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    class MyHolder extends RecyclerView.ViewHolder{
+        private TextView textname;
+        private TextView textage;
+        public MyHolder(View itemView) {
+            super(itemView);
+            textname = itemView.findViewById(R.id.tvname);
+            textage = itemView.findViewById(R.id.tvage);
+        }
+    }
+
+    //1  创建点击接口
+    interface  MyOnclik{
+        void myOnClikPosition(int position);
+    }
+    // 2 以接口为  数据类型  定义全部变量
+    private  MyOnclik myOnclik;
+
+    // 3 给全局变量  定义 set 方法
+    public void setMyOnclik(MyOnclik myOnclik) {
+        this.myOnclik = myOnclik;
+    }
+
+    //4写点击方法  全局变量调用接口的方法
+
+    //5 在要使用的时候 要调用set 方法
+}
+===============>
+
+实体类：String name;String age;
+

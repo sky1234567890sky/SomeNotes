@@ -1,0 +1,234 @@
+===========侧滑+RecyclerView================================》
+public class MainActivity extends AppCompatActivity {
+    private Toolbar mToolbar;
+    private NavigationView mNv;
+    private DrawerLayout mDl;
+    private LinearLayout ll;
+    private RecyclerView rl;
+    private String t;
+    private ArrayList<User> list;
+    private MyAdapter adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+        initData();
+    }
+    private void initData() {
+        //布局管理器
+        rl = findViewById(R.id.rl);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rl.setLayoutManager(linearLayoutManager);
+
+        list = new ArrayList<User>();
+        for (int i = 0; i < 20; i++) {
+            list.add(new User("小明"+i,i));
+        }
+        adapter = new MyAdapter(list);
+        rl.setAdapter(adapter);
+    }
+    private void initView() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle("");
+        mNv = (NavigationView) findViewById(R.id.nv);
+        mDl = (DrawerLayout) findViewById(R.id.dl);
+        mNv.setItemIconTintList(null);//解决NavigetionView图片不能现实问题
+        setSupportActionBar(mToolbar);
+
+        ActionBarDrawerToggle actionBarDrawerToggle =
+                new ActionBarDrawerToggle(this, mDl, mToolbar, R.string.open, R.string.guanbi);
+        mDl.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();//启动点击侧滑
+        //侧滑菜单 menu的点击事件
+        mNv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            private String title;
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
+                switch (item.getItemId()){
+                    case  R.id.menu1:
+                        title = item.getTitle().toString();
+                         break;
+                    case  R.id.menu2:
+                        title = item.getTitle().toString();
+                        break;
+                    case  R.id.menu3:
+                        title = item.getTitle().toString();
+                        break;
+                    case  R.id.menu4:
+                        title = item.getTitle().toString();
+                        break;
+                }
+                Toast.makeText(MainActivity.this, "你点击了"+title, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        //监听侧滑打开开关
+        //主页面布局
+        ll = findViewById(R.id.ll);
+        mDl.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                ll.setX(mNv.getWidth()*slideOffset);
+            }
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+
+        });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.title_right,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item1:
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                rl.setLayoutManager(linearLayoutManager);
+                break;
+            case R.id.item2:
+                t = item.getTitle().toString();
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+                rl.setLayoutManager(gridLayoutManager);
+                break;
+            case R.id.item3:
+                t = item.getTitle().toString();
+                StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                rl.setLayoutManager(staggeredGridLayoutManager);
+                break;
+        }
+        Toast.makeText(MainActivity.this, "你点击了"+t, Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
+    }
+}
+
+===============RecyclerView======================================>
+class MyAdapter extends RecyclerView.Adapter<MyAdapter.vholder>{
+
+    private final ArrayList<User> mlist;
+    public MyAdapter(ArrayList<User> list) {
+        this.mlist=list;
+    }
+    @NonNull
+    @Override
+    public MyAdapter.vholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rl, null, false);
+        vholder holder = new vholder(inflate);
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyAdapter.vholder holder, int position) {
+        holder.tv1.setText(mlist.get(position).getName());
+        holder.tv2.setText(mlist.get(position).getAge()+"");
+    }
+    @Override
+    public int getItemCount() {
+        return mlist.size();
+    }
+    class vholder extends RecyclerView.ViewHolder{
+        private final TextView tv1;
+        private final TextView tv2;
+        public vholder(View itemView) {
+            super(itemView);
+            tv1 = itemView.findViewById(R.id.name);
+            tv2 = itemView.findViewById(R.id.age);
+        }
+    }
+}
+==================布局DrawableLayout======================================>
+
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/dl"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.homework.MainActivity"
+    android:background="@drawable/lan"
+    >
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#40F4B4"
+            >
+
+            <TextView
+                android:text="标题"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                />
+        </android.support.v7.widget.Toolbar>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="30sp"
+            android:gravity="center"
+            />
+    </LinearLayout>
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            app:menu="@menu/menu"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/headlayout"
+            >
+        </android.support.design.widget.NavigationView>
+
+</android.support.v4.widget.DrawerLayout>
+
+===============Menu================================>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu1" android:checked="true"
+        android:icon="@drawable/baobao1" android:title="@string/str1">
+    </item>
+    <item android:id="@+id/menu2" android:checked="true"
+        android:icon="@drawable/chenyifaer" android:title="@string/str2">
+    </item>
+    <item android:id="@+id/menu3" android:checked="true"
+        android:icon="@drawable/chenyixun" android:title="@string/str3">
+    </item>
+    <item android:id="@+id/menu4" android:checked="true"
+        android:icon="@drawable/chenyixun" android:title="@string/str4">
+    </item>
+</menu>
+
+============================================================》
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/item1" android:title="线性">\
+</item>
+    <item android:id="@+id/item2" android:title="网格">\
+    </item>
+    <item android:id="@+id/item3" android:title="瀑布流">\
+    </item>
+    </menu>
+
+
+

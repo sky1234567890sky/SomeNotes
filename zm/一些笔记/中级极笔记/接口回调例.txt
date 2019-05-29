@@ -1,0 +1,107 @@
+=======================================================》
+适配器中-------》
+ //设置数据
+    private Myonclick myOnclick;
+    private MyLongClick myLongClick;
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+        Myholder h = (Myholder) holder;
+        h.tv1.setText(list.get(position).getName());
+        h.tv2.setText(list.get(position).getContent());
+        h.img.setImageResource(list.get(position).getImg());
+		//固定格式（条目点击事件）
+        h.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myOnclick !=null){//可以不判空
+                    myOnclick.onclick(position);
+                }
+            }
+        });
+        //条目长按点击事件
+        h.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (myLongClick != null){
+                    myLongClick.longClick(position);
+                }
+                return true;
+            }
+        });
+    }
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+    
+    class Myholder extends  RecyclerView.ViewHolder{
+        private final ImageView img;
+        private final TextView tv1;
+        private final TextView tv2;
+        public Myholder(View itemView) {
+            super(itemView);
+            img = itemView.findViewById(R.id.item_img);
+            tv1 = itemView.findViewById(R.id.item_tv1);
+            tv2 = itemView.findViewById(R.id.item_tv2);
+        }
+    }
+    //在适配器中
+    //定义一个接口
+    public interface  Myonclick{
+        void onclick(int position);
+    }
+    public void setMyOnclick(Myonclick myOnclick) {
+        this.myOnclick = myOnclick;
+    }
+    //定义一个长按接口
+    public  interface  MyLongClick{
+        void longClick(int position);
+    }
+
+    public void setMyLongClick(MyLongClick myLongClick){
+        this.myLongClick = myLongClick;
+    }
+    /*
+    1定义一个接口
+    2.定义一个方法
+    3.以接口数据类型 定义成员变量
+    4.定义一个set方法 get接口成员变量 赋值
+    5.onBindViewHolder方法中 写条目点击事件
+    6.判断 接口对象非空null 调用接口方法
+     */
+---------------》
+在MainActivity中：
+		myAdapter = new MyAdapter(this, list);
+        mRl.setAdapter(myAdapter);
+        
+        //为字条目设置点击事件
+        myAdapter.setMyOnclick(new MyAdapter.Myonclick() {
+            @Override
+            public void onclick(int position) {
+            //执行体
+                list.remove(position);
+                myAdapter.notifyDataSetChanged();
+            }
+        });
+        myAdapter.setMyLongClick(new MyAdapter.MyLongClick() {
+            @Override
+            public void longClick(int position) {
+            //执行体
+                Toast.makeText(Main2Activity.this,
+                "长按点击", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+

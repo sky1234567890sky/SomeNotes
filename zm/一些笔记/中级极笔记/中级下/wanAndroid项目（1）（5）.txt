@@ -1,0 +1,216 @@
+======================》
+  //设置标题栏
+        ArrayList<Fragment> lists = new ArrayList<Fragment>();
+        title = new ArrayList<>();
+        lists.add(blankFragment1);
+        lists.add(blankFragment2);
+        lists.add(blankFragment3);
+        lists.add(blankFragment4);
+        lists.add(blankFragment5);
+        title.add("首页");
+        title.add("知识体系");
+        title.add("公众号");
+        title.add("导航");
+        title.add("项目");
+
+        MyFragmentAdapter myFragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager(), lists, title);
+        vp.setAdapter(myFragmentAdapter);
+        //tablayout的点击监听
+        tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                switchtab(position);
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+//将vp与Tab相结合
+        tab.setupWithViewPager(vp);
+        
+        
+        
+        
+         private void switchtab(int position) {
+        if (position == 0) {
+            main_toolbar_tv.setText("首页");
+        } else if (position == 1) {
+            main_toolbar_tv.setText(title.get(1));
+        } else if (position == 2) {
+            main_toolbar_tv.setText(title.get(2));
+        } else if (position == 3) {
+            main_toolbar_tv.setText(title.get(3));
+        } else {
+            main_toolbar_tv.setText(title.get(4));
+        }
+    }
+    
+    
+    
+    //设置图标
+    
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initFragment();
+        initView();
+        initTatAt();
+        initRg();//底部导航栏点击监听
+    }
+    private void initTatAt() {
+        for (int i = 0; i < title.size(); i++) {
+            TabLayout.Tab tabAt = tab.getTabAt(i);
+            View inflate = LayoutInflater.from(this).inflate(R.layout.tab_item, null, false);
+            ImageView iv = inflate.findViewById(R.id.tab_iv);
+            TextView tv = inflate.findViewById(R.id.tab_tv);
+            if (i == 0) {
+                iv.setImageResource(R.drawable.f1_selector);
+            } else if (i == 1) {
+                iv.setImageResource(R.drawable.f2_selector);
+            } else if (i == 2) {
+                iv.setImageResource(R.drawable.f3_selector);
+            } else if (i == 3) {
+                iv.setImageResource(R.drawable.f4_selector);
+            } else {
+                iv.setImageResource(R.drawable.f5_selector);
+            }
+            tv.setText(title.get(i));
+            tabAt.setCustomView(inflate);
+        }
+
+    }
+    
+    
+    
+    
+    
+    
+=====================================================》
+    项目五：
+    
+public class ProjectFragment extends Fragment {
+
+    Handler handler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what){
+
+                case 1:
+
+                    List<ProjectTab.DataBean> data = (List<ProjectTab.DataBean>) msg.obj;
+                    Log.i("tag","data==> "+data.get(0).getName());
+
+                    initFragment(data);
+
+                    break;
+
+            }
+
+        }
+    };
+
+    //根据 网络获取的  tab 数据  添加对应的  tab 个数  和  fragment 个数
+    private void initFragment(List<ProjectTab.DataBean> data) {
+
+        ArrayList<Fragment> fragments = new ArrayList<>();
+
+        for (int i=0; i<data.size();i++){
+            // data  中 对应  fragment 需要的 接口 数据的  id
+            ProjectList projectList = new ProjectList();
+            Bundle bundle = new Bundle();
+            bundle.putInt("id",data.get(i).getId());
+            projectList.setArguments(bundle);
+            fragments.add(projectList);
+        }
+
+        //创建 vp 适配器
+        VpListAdapter vpListAdapter = new VpListAdapter(getChildFragmentManager(), fragments, data);
+        vp.setAdapter(vpListAdapter);
+
+        tab.setupWithViewPager(vp);// 联合  tab  vp
+
+    }
+
+    private TabLayout tab;
+    private ViewPager vp;
+    private int page = 1 ;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.layout_project_fragment,container,false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initView();
+
+    }
+
+    private void initView() {
+
+        tab = getView().findViewById(R.id.tab);
+        vp = getView().findViewById(R.id.vp);
+        getDataItem();
+    }
+
+   /* private void initData() {
+
+        getDataItem();
+    }*/
+
+    public void getDataItem() {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    URL url = new URL("http://www.wanandroid.com/project/tree/json");
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    int responseCode = connection.getResponseCode();
+                    if(responseCode == 200 ){
+                        StringBuffer sbf = new StringBuffer();
+                        InputStream inputStream = connection.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                        String len = null;
+                        while( (len =reader.readLine())!=null){
+                            sbf.append(len);
+                        }
+                        String s = sbf.toString();
+                       // Log.i("tag","sbf==> "+sbf.toString());
+                        // 解析json
+                        Gson gson = new Gson();
+                        ProjectTab projectTab = gson.fromJson(s, ProjectTab.class);
+
+                        List<ProjectTab.DataBean> data = projectTab.getData();
+
+                        Message message = new Message();
+                        message.what = 1;
+                        message.obj = data;
+                        handler.sendMessage(message);
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+    }
+    
+    
+    
+

@@ -1,0 +1,118 @@
+package com.example.day_07alerdialog;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+
+public class MainActivity extends Activity implements OnClickListener{
+
+	private AlertDialog create;
+	private ImageView ivhead;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		
+		ivhead = (ImageView) findViewById(R.id.iv_head);
+		
+		ivhead.setOnClickListener(this);
+		
+		// OnClickListener   .setPositiveButton("相机", null)
+		
+		//创建一个弹窗
+		create = new AlertDialog.Builder(this).setTitle("设置头像")
+			.setPositiveButton("相机", new  DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					//打开相机的代码
+					openXiangJi();
+				}
+			})
+			.setNegativeButton("相册", new  DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					//打开相册的代码
+					openXiangCe();
+				}
+			}).create();
+		
+	}
+
+	// 打开相机
+		public void openXiangJi(){
+			
+			Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			startActivityForResult(cameraIntent, 2018);
+			
+		}
+	
+	// 打开相册
+		public void openXiangCe(){
+			
+			Intent intent = new Intent();
+			intent.addCategory(Intent.CATEGORY_OPENABLE);
+			intent.setType("image/*");
+			intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+			startActivityForResult(intent, 2017);
+			
+		}
+	
+	@Override
+	public void onClick(View v) {
+		
+		//  弹窗
+		create.show();
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		//相机
+		if( resultCode == RESULT_OK && requestCode ==2018 ){
+			
+			Bitmap bm = (Bitmap) data.getExtras().get("data");
+			ivhead.setImageBitmap(bm);
+		}
+		
+		//相册
+		if( resultCode == RESULT_OK && requestCode ==2017 ){
+			
+			Uri uri = data.getData();
+			ivhead.setImageURI(uri);
+		}
+		
+		/*if( resultCode == RESULT_OK){
+			
+			switch (requestCode) {
+			case 2017:
+				
+				break;
+				
+			case 2018:
+				
+				break;
+
+			default:
+				break;
+			}
+			
+		}*/
+		
+	}
+}

@@ -1,0 +1,38 @@
+package com.example.day18_webview;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+//https://blog.csdn.net/wyh_file/article/details/80324028   倒计时
+public class MainActivity extends Activity {
+
+	private WebView wv;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		
+		wv = (WebView) findViewById(R.id.wv);	
+		
+		wv.setWebViewClient(new WebViewClient());// APP 内部打开 html
+		
+		wv.loadUrl("http://www.baidu.com");
+		
+	}
+	
+	// 回退键处理
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if( keyCode ==KeyEvent.KEYCODE_BACK && wv.canGoBack()){
+			wv.goBack();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+}

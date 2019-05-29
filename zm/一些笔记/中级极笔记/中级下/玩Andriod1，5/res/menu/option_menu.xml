@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/wan" android:title="@string/wan" android:icon="@drawable/home_highlight"
+        app:showAsAction="always"
+        ></item>
+    <item android:id="@+id/music" android:title="@string/music" android:icon="@drawable/icon_music"
+        app:showAsAction="always"
+        ></item>
+</menu>

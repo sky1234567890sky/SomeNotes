@@ -1,0 +1,47 @@
+  
+ Android 解决RecyclerView瀑布流效果结合Glide使用时图片变形的问题
+问题描述：使用Glide加载RecyclerView的Item中的图片，RecyclerView使用了瀑布流展示图片，但是滚动时图片会不断的加载，并且大小位置都会改变，造成显示错乱。
+
+解决方法：使用瀑布流，我们可以根据要展示的列数来将屏幕宽度等分，从而获得Item的宽度。知道了宽度，
+那么我们就可以使用Glide的override()方法根据图片的比例自适应地放大或缩小得到合适的高度。这样显示时就不会由错乱的问题了。
+
+步骤1：设置Item的最外层布局的layout_height为wrap_content(当然也可以设置一个固定大小)，如果Item里面的图片也设置高度为wrap_content；
+
+步骤2：先得到屏幕的宽高，然后根据要显示的列数进行均分。比如我现在想要展示列数为2的瀑布流，我们就可以把屏幕宽度除以2，得到图片的宽度。
+//屏幕的宽度(px值）
+int screenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+//Item的宽度，或图片的宽度
+int width = screenWidth/2;
+步骤3：用Glide加载图片
+//这里的SIZE_ORIGINAL为Gilde里自带的参数，不是我定义的常量
+Glide.with(getContext()).load(item.getUrl()).override(width,SIZE_ORIGINAL)          
+.fitCenter().into(imageview);
+=======================================================================================》
+  //Glide4图片处理依赖
+            implementation 'com.github.bumptech.glide:glide:4.9.0'
+            annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+            
+            //设置弧度
+ RequestOptions option=new RequestOptions().transform(new RoundedCorners(500));
+  //图片圆角    
+  RequestOptions requestOptions = new RequestOptions().circleCrop();
+  Glide.with(context).load(r.getHeader()).apply(requestOptions).placeholder(R.mipmap.ic_launcher).into(holder.img);
+
+
+=============================================================》tab栏点击是字体变色
+style中写：
+<style name="MyTablayoutstyle" parent="Base.Widget.Design.TabLayout">
+        <item name="tabBackground">@color/white</item>
+        <item name="tabIndicatorColor">#fa6a13</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabSelectedTextColor">#fa6a13</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#fa6a13</item>
+    </style>
+    <tablayout布局引用
+    style="@style/MyTablayoutstyle"
+    
+   //去掉线添加属性
+   <app:tabIndicatorHeight="0dp"
+   <app:tabSelectedTextColor="@color/white"
+ 给tabIndicatorHeight属性设置0dp，或者给tabSelectedTextColor属性设置透明，   

@@ -1,0 +1,73 @@
+//倒计时
+ //倒计时
+ private int in = 4;
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        in--;
+                        if (in >= 0) {
+                            tv.setText(in + "s");
+                        } else {
+                            timer.cancel();
+                            startActivity(new Intent(MainActivity.this, Main2Activity.class));
+                        }
+                    }
+                });
+            }
+        }, 1000, 1000);
+        
+        //导入
+timer.cancel()；//（跳转时关闭倒计时）点击按钮跳过引导界面时，要在启动跳转方法前调用此代码；不然返回倒计时还有可能没走完；
+=========================》
+1.在主界面设置接口回掉方法；
+ //重写两个方法选项菜单
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(1,1,1,"线性");
+        menu.add(1,2,1,"网格");
+        menu.add(1,3,1,"瀑布");
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+                mLongclick.onclick(1);
+                break;
+            case 2:
+                mLongclick.onclick(2);
+                break;
+            case 3:
+                mLongclick.onclick(3);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    //接口方法回调
+    private static Longclick mLongclick;
+    public interface Longclick{
+        void onclick(int i);
+    }
+    public static void setmLongclick(Longclick mLongclick) {
+        Main2Activity.mLongclick = mLongclick;
+    }
+//在fragment中调用主界面里的回调方法。
+Main2Activity.setmLongclick(new Main2Activity.Longclick() {
+            @Override
+            public void onclick(int i) {
+                if (i==1){
+                    xrv.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    adapter.notifyDataSetChanged();
+                }else if (i==2){
+                    xrv.setLayoutManager(new GridLayoutManager(getActivity(),2));
+                    adapter.notifyDataSetChanged();
+                }else{
+                    xrv.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });

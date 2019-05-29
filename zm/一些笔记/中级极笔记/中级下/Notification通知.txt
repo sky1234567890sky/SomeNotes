@@ -1,0 +1,30 @@
+============================》
+ //1,获取NoitificationManage对象
+                NotificationManager systemService = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                String ChannelId = "1";
+                String ChannelName="default";
+                //初始化Notification对象，创建通道对象
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel(ChannelId, ChannelName, NotificationManager.IMPORTANCE_DEFAULT);
+                    channel.enableLights(true);//开启指示灯
+                    channel.setLightColor(Color.RED);//指示灯颜色
+                    channel.setShowBadge(true);//检测是否显示角标
+                    systemService.createNotificationChannel(channel);
+                }
+                //3.实例化 NotificationCompat.Builder 并设置相关属性,生成Notification
+                Intent intent = new Intent(this, MainActivity.class);
+                PendingIntent activities = PendingIntent.getActivities(this, 100, new Intent[]{intent}, PendingIntent.FLAG_UPDATE_CURRENT);
+                Notification build = new NotificationCompat.Builder(this, "1")
+                        .setSmallIcon(R.mipmap.ic_launcher)//设置小图
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background))//设置大图
+                        .setContentText("我是内容")//设置内容
+                        .setContentTitle("我是标题")//设置标题
+                        .setContentIntent(activities)//设置延时意图
+                        .setDefaults(Notification.DEFAULT_ALL)//设置提示效果
+                        .setBadgeIconType(R.mipmap.ic_launcher)//设置设置角标样式
+                        .setAutoCancel(true)//设置点击自动消失
+                        .setNumber(3)//设置角标计数
+                        .build();
+                //4.调用NotificationManager 方法notify()发送通知
+                systemService.notify(100,build);
+

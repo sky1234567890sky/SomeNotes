@@ -1,0 +1,130 @@
+package com.jy.day7recyclerviewfragment;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.widget.AbsListView;
+
+import com.jy.adapters.MyAdapter1;
+import com.jy.beans.Goods;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView mRc;
+    private ArrayList<Goods> goods;
+    private MyAdapter1 myAdapter1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+        initData();
+    }
+
+    private void loadMore(){
+        goods.add(new Goods("大米1"));
+        goods.add(new Goods("大米2",R.mipmap.tu1));
+        goods.add(new Goods("大米3"));
+        goods.add(new Goods("大米4",R.mipmap.tu2));
+        goods.add(new Goods("大米5"));
+        goods.add(new Goods("大米6",R.mipmap.tu3));
+        goods.add(new Goods("大米7"));
+        goods.add(new Goods("大米8",R.mipmap.tu1));
+        goods.add(new Goods("大米9"));
+        goods.add(new Goods("大米10",R.mipmap.tu2));
+        goods.add(new Goods("大米11"));
+        goods.add(new Goods("大米12",R.mipmap.tu3));
+
+        myAdapter1.notifyDataSetChanged();
+    }
+
+    private void initData() {
+        goods = new ArrayList<>();
+        goods.add(new Goods("小米1"));
+        goods.add(new Goods("小米2",R.mipmap.tu1));
+        goods.add(new Goods("小米3"));
+        goods.add(new Goods("小米4",R.mipmap.tu2));
+        goods.add(new Goods("小米5"));
+        goods.add(new Goods("小米6",R.mipmap.tu3));
+        goods.add(new Goods("小米7"));
+        goods.add(new Goods("小米8",R.mipmap.tu1));
+        goods.add(new Goods("小米9"));
+        goods.add(new Goods("小米10",R.mipmap.tu2));
+        goods.add(new Goods("小米11"));
+        goods.add(new Goods("小米12",R.mipmap.tu3));
+
+        mRc.setLayoutManager(new LinearLayoutManager(this));
+        //创建适配器,并配置
+        myAdapter1 = new MyAdapter1(this, goods);
+        mRc.setAdapter(myAdapter1);
+
+        mRc.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                //rc停止时计算是否需要加载新数据
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
+                    RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
+                    if(lm instanceof LinearLayoutManager){//线性
+                        LinearLayoutManager llm = (LinearLayoutManager) lm;
+                        //最后一条可见的数据的索引
+                        int lastVisibleItemPosition = llm.findLastVisibleItemPosition();
+                        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                        int itemCount = adapter.getItemCount();//得到适配器的最条目
+                        if(lastVisibleItemPosition == itemCount-1){//相等：说明，当前显示的是最后一条数据，加载更多
+                            loadMore();
+                        }
+
+                    }else if(lm instanceof GridLayoutManager){//网格
+                        GridLayoutManager llm = (GridLayoutManager) lm;
+                        //最后一条可见的数据的索引
+                        int lastVisibleItemPosition = llm.findLastVisibleItemPosition();
+                        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                        int itemCount = adapter.getItemCount();//得到适配器的最条目
+                        if(lastVisibleItemPosition == itemCount-1){//相等：说明，当前显示的是最后一条数据，加载更多
+                            loadMore();
+                        }
+
+                    }else{//瀑布
+                        StaggeredGridLayoutManager llm = (StaggeredGridLayoutManager) lm;
+                        int[] is = new int[3];//表示有3列，根据设置进行修改
+                        //最后三条可见的数据的索引
+                        int[] lastVisibleItemPositions = llm.findLastVisibleItemPositions(is);
+                        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                        int itemCount = adapter.getItemCount();//得到适配器的总条目
+
+                        boolean isLoad = false;
+                        for(int i=0;i<lastVisibleItemPositions.length;i++){//遍历最后的三个可见的数据的索引和总条目比较
+                            if(lastVisibleItemPositions[i] == itemCount-1){//可以加载更多
+                                isLoad = true;
+                                break;
+                            }
+                        }
+                        //通过isload判断最后显示三条数据是不是有一条是总条目
+                        if(isLoad == true){
+                            loadMore();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
+
+
+    }
+
+    private void initView() {
+        mRc = (RecyclerView) findViewById(R.id.rc);
+    }
+}

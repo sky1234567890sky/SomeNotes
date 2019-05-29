@@ -1,0 +1,137 @@
+思路
+
+//1.从C盘.Android文件下导debug.keystor文件夹至D盘。
+cmd:keytool -list -v -keystore debug.keystore
+有效期开始日期: Thu May 02 13:22:32 CST 2019, 截止日期: Sat Apr 24 13:22:32 CST 2049
+证书指纹:
+         MD5: D0:C1:36:BE:06:1F:A8:DD:5B:9C:EA:0D:7B:70:62:03
+         SHA1: 67:8B:10:43:5D:D4:F0:DD:9C:77:47:D3:8D:CF:35:51:20:AC:78:25
+         SHA256: EC:CE:1E:C1:8D:3B:AE:F2:81:16:E8:F5:09:ED:C3:39:29:00:2D:7A:37:A8:E9:59:2B:81:CC:C7:FF:30:4A:31
+         签名算法名称: SHA1withRSA
+         版本: 1
+//登录百度地图开放平台网新建
+//qDz5PSGgeYYZ2uWqkULCPfOjpY2FdHaY
+下载开发包
+ 2.将开发包拷贝至工程libs，res，assets
+3. 在app目录下的build.gradle文件中android块中配置sourceSets标签
+sourceSets {
+           main {
+               jniLibs.srcDir 'libs'
+           }
+    }
+signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+4.往工程中添加jar文件；
+方法二：
+      1、菜单栏选择File -> Project Structure
+      2、在弹出的Project Structure对话框中选中左侧的Modules列表下的app目录，然后点击右侧页面中的Dependencies选项卡
+
+5.写代码
+第一步 配置AndroidManifest.xml文件
+1.在<application>中加入如下代码配置开发密钥（AK）：
+  <!--百度地图-->
+ <meta-data  
+        android:name="com.baidu.lbsapi.API_KEY"  
+        android:value="开发者 key" />  
+<service android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote"/>
+
+        <activity android:name=".WNaviGuideActivity"></activity>
+        <!--百度地图-->
+
+2.给权限
+
+    <!--//获取设备网络状态，禁用后无法获取网络状态-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--//网络权限，当禁用后，无法进行检索等相关业务-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--//读取设备硬件信息，统计数据-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--//读取系统信息，包含系统版本等信息，用作统计/-->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <!--//获取设备的网络状态，鉴权所需网络代理-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--//允许sd卡写权限，需写入地图数据，禁用后无法显示地图-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--//这个权限用于进行网络定位-->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!--//这个权限用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--//获取统计数据-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--//使用步行AR导航，配置Camera权限-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!--//程序在手机屏幕关闭后后台进程仍然运行-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+第二步 在布局文件中添加地图容器
+MapView是View的一个子类，用于在Android View中放置地图。MapView的使用方法与Android提供的其他View一样。
+
+<com.baidu.mapapi.map.MapView  
+    android:id="@+id/bmapView"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"  
+    android:clickable="true" />
+
+第三步 地图初始化，新建一个自定义的Application，在其onCreate方法中完成SDK的初始化。示例代码如下：
+
+public class DemoApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //在使用SDK各组件之前初始化context信息，传入ApplicationContext   
+        SDKInitializer.initialize(this);
+        //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
+        //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
+        SDKInitializer.setCoordType(CoordType.BD09LL);
+    }
+}
+
+3.在AndroidManifest.xml文件中声明该Application
+
+4.创建地图Activity，管理MapView生命周期
+
+public class MainActivity extends Activity {  
+    private MapView mMapView = null;  
+    @Override  
+    protected void onCreate(Bundle savedInstanceState) {  
+        super.onCreate(savedInstanceState);    
+//方法一
+        setContentView(R.layout.activity_main);  
+        //获取地图控件引用  
+        mMapView = (MapView) findViewById(R.id.bmapView);  
+    }  
+    @Override  
+    protected void onResume() {  
+       super.onResume();  
+       //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理  
+       mMapView.onResume();  
+    }  
+    @Override  
+    protected void onPause() {  
+      super.onPause();  
+      //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理  
+      mMapView.onPause();  
+    } 
+    @Override  
+    protected void onDestroy() {  
+      super.onDestroy();  
+      //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理  
+      mMapView.onDestroy();  
+    }  
+}
+
+//方法二
+通过添加View显示地图；百度地图SDK支持不用通过layout文件中添加MapView控件，直接在Java代码中添加MapView的方式来展示地图，示例如下
+ //   setContentView(R.layout.activity_main);
+创建MapView对象
+MapView mapView = new MapView(this);//变全局，并执行生周期的方法。勿忘。
+2添加MapView对象
+setContentView(mapView);

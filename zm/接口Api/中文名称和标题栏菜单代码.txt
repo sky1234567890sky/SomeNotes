@@ -1,0 +1,25 @@
+android.enableAapt2=false
+
+中文主机名称的代码
+
+ //处理事项 菜单图标问题
+    @Override
+    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
+        if (menu != null) {
+            if (menu.getClass() == MenuBuilder.class) {
+                try {
+
+                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+
+                    m.setAccessible(true);
+
+                    m.invoke(menu, true);
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
+    }

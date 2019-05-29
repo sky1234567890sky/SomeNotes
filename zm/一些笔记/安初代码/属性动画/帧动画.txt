@@ -1,0 +1,112 @@
+
+1、在res下的drawable文件夹上右键 –>new –>drawable resource file，文件创建完成后，修改xml；
+-------》
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    根标签为animation-list，其中oneshot代表着是否只展示一遍，设置为false会不停的循环播放动画
+    根标签下，通过item标签对动画中的每一个图片进行声明
+    android:duration 表示展示所用的该图片的时间长度  -->
+<animation-list
+======================》
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:duration="100" android:drawable="@mipmap/a"></item>
+    <item android:duration="100" android:drawable="@mipmap/b"></item>
+    <item android:duration="100" android:drawable="@mipmap/c"></item>
+    <item android:duration="100" android:drawable="@mipmap/d"></item>
+    <item android:duration="100" android:drawable="@mipmap/e"></item>
+    <item android:duration="100" android:drawable="@mipmap/f"></item>
+    <item android:duration="100" android:drawable="@mipmap/g"></item>
+    <item android:duration="100" android:drawable="@mipmap/h"></item>
+</animation-list>
+=====》
+
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@mipmap/ad"
+        android:duration="500"></item>
+    <item
+        android:drawable="@mipmap/ac"
+        android:duration="500"></item>
+    <item
+        android:drawable="@mipmap/ab"
+        android:duration="500"></item>
+
+</animation-list>
+
+引用： 
+//帧动画 
+AnimationDrawable drawable = (AnimationDrawable) getResources().getDrawable(R.drawable.man_walk); 
+framView.setBackgroundDrawable(drawable); 
+drawable.start();
+====》布局：
+  <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/animationIV"
+        android:padding="5px"
+        android:src="@drawable/animation1"/>
+ <Button
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:text="顺序显示"
+     android:id="@+id/buttonA"
+     android:padding="5px"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="停止"
+        android:id="@+id/buttonB"
+        android:padding="5px"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="倒序显示"
+        android:padding="5px"
+        android:id="@+id/buttonC"/>
+</LinearLayout>
+//三种实现方式
+java代码：
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+private ImageView animationIV;
+    private AnimationDrawable animationDrawable;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_main);
+        animationIV=(ImageView)findViewById(R.id.animationIV);
+        Button btnA=(Button)findViewById(R.id.buttonA);
+        Button btnB=(Button)findViewById(R.id.buttonB);
+        Button btnC=(Button)findViewById(R.id.buttonC);
+        btnA.setOnClickListener(this);
+        btnB.setOnClickListener(this);
+        btnC.setOnClickListener(this);
+    }
+  @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.buttonA:
+                animationIV.setImageResource(R.drawable.animation1);
+                animationDrawable=(AnimationDrawable)animationIV.getDrawable();
+                animationDrawable.start();
+                break;
+            case R.id.buttonB:
+                animationDrawable=(AnimationDrawable)animationIV.getDrawable();
+                animationDrawable.stop();
+                break;
+            case R.id.buttonC:
+                animationIV.setImageResource(R.drawable.animation2);
+                animationDrawable=(AnimationDrawable)animationIV.getDrawable();
+                animationDrawable.start();
+                break;
+        }
+    }
+
+
+
+
+
+

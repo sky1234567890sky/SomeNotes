@@ -1,0 +1,165 @@
+1.OKHttp同步和异步的区别
+    同步：execute（）方法
+        请求网络数据要在子线程中完成操作，然后发送到主线程
+        同一时间只允许跑一个线程任务,是耗时操作
+    异步：enqueue（）方法
+        允许多线程任务,效率高
+
+    同步是阻塞式的，是在当前线程执行
+	异步是并发式的，它会自动启动一个新的线程处理逻辑
+                          
+2.简述OKHttp的使用步骤
+     添加网络配置
+     导入OKHttp依赖                                
+	 创建请求对象（get请求不需要此步骤）
+     创建FormBody
+     创建请求体
+     请求对象.newCall(请求体)
+     绑定
+     调用同步execute()或异步enqueue()处理数据
+
+3.OKHttp使用了哪些设计模式
+    单例模式    
+	原型模式
+	外观模式
+	代理模式
+	策略模式
+	亨元模式
+	桥接模式
+	组合模式
+	创建者模式
+	建造者模式
+	责任链模式
+	观察者模式
+	装饰器模式
+    适配器模式
+	过滤器模式
+	工厂发放模式
+	模板方法模式
+	抽象工厂模式
+      
+4.HttpURLConnection及OKHttp3的对比分析
+     HttpURLConnection:是一种多用途、轻量极的HTTP客户端，请求到的数据是流，
+     使用它来进行HTTP操作可以适用于大多数的应用程序；
+     按照层级来说，OkHttp和HttpUrlConnection是一级的，用socket实现了网络连接
+     ，OkHttp进行网络请求封装，优化了网络请求效率，使用    方便简单。
+
+5.Retrofit2常用注解
+      @GET 	                GET请求
+      @POST 	            POST请求
+      @Headers 	            添加请求头
+      @Path 	            替换路径
+      @Query 	            替代参数值，通常是结合get请求的
+      @QueryMap             参数值以HashMap的形式传入，结合get使用
+      @Field 	            替换参数值，是结合post请求的
+      @FieldMap             参入值以HashMap的形式传入，结合post使用
+      @FormUrlEncoded       用表单数据提交
+6.Retrofit2发送get、post请求的方式
+	网络权限
+	导依赖
+	定义API接口
+	添加@GET 或 @POST注解
+	初始化retrofit
+	构建retrofit
+	调用同步或异步请求网络数据
+7.Retrofit2发送同步异步请求
+    	网络权限
+	导依赖
+	定义API接口
+	初始化retrofit
+	构建retrofit
+	调用同步或异步请求网络数据
+
+8.Retrofit和OKHttp的区别
+   Retrofit底层是使用OKHttp封装的,网络请求的工作本质上是OkHttp完成，而Retrofit 负责网络请求接口的封装,使用接口和注解形式请求网络数据,使用方便简单。
+   Okhttp通过创建okhttpclient,request,和call对象进行同步异步数据请求。
+
+9.Overload和Override的区别
+    重载(Overload)是重载,在同一个类中可以有多个名称相同的方法，参数类型和参数个数不同
+    重写(Override)是重写,表示子类中的方法可以与父类中的某个方法的名称和参数完全相同(多态性)
+	
+10.String、Stringbuffer、Stringbuilder的区别
+    String为常量,长度不可变，Stringbuffer和Stringbuilder长度可变
+    Stringbuffer为变量,线程安全,效率低
+    Stringbuilder为变量,线程不安全效,效率高
+
+11.实现字符串倒叙
+    ①使用数组循环   
+    ②String的reverse方法 
+    ③Stringbuffer的循环 
+    ④栈的先进后出   
+    ⑤迭代完成   
+      
+12.集合
+	Collection单列:(1)list:有序可重复
+	                       ①ArrayList:底层数组,查询快,增删慢,线程不安全,效率高  
+                           ②Vector:底层数组,查询快,增删慢,线程安全,效率低
+                           ③LinketList:底层链表,查询慢,增删快,线程不安全,效率高
+						   	
+	               (2)set: 无序唯一
+                           ①HashSet:底层哈希表   
+                           ②TreeSet:底层红黑树
+                           ③LinketHashSet:链表保证元素有序
+						                  哈希表保证元素唯一
+										  				  
+	Map双列:(1)HashMap:线程不安全效率高
+				①LinketHashMap:有序唯一
+	        (2)HashTable:线程安全效率低
+			(3)TreeMap:底层红黑树
+										  		  
+13.抽象类和接口的区别
+	抽象类:抽象类用来抽象具体对象,可以有具体的方法和属性,抽象类只能单独继承
+	
+	接口:接口用来抽象具体对象,主要用来抽象功能,可继承接口,并可多继承接口,也有抽象方法和不可变常量
+	
+14.线程的几种状态
+    新建(new)
+	可运行(runable)
+	运行(running)
+	阻塞(block)
+	死亡(dead)
+
+15. final/finally\finanlize()的区别？
+	    final:被修饰的类,不能被继承,方法不能重写,变量变成常量，
+	  finally:用于异常处理,执行清除操作。
+	finanlize:在垃圾收集器删除,对象之前调用此方法
+
+16.	使用GreentDao的时候，会在Gen文件下生成的文件有什么？
+      DaoMaster:    GreenDao的数据库对象。
+      DaoSession：  管理所有的Dao数据对象
+      以及对应的数据对象的Dao类,封装了对应数据对象的表操作。
+	  
+17.	GreenDao的常用注解，以及增删改查的方法？
+     @Entity 
+	 @Id 
+	 @Property 
+	 @NotNull 
+	 @Transient 
+	 @Unique 
+	 @Generated
+
+	 插入:Insert 
+	 删除:delete 
+	 修改:update 
+	 查询:query   
+
+18.	简述GreenDao的优缺点
+      优点：性能大,
+	        内存开源最小化
+	        对Android进行高度优化
+      缺点：文档为英文
+
+		
+19.常用的排序方式
+	选择排序
+	冒泡排序
+	二分查找排序
+	快速排序
+	插入排序
+	归并排序
+
+20.Java中的引用类型都有哪些？
+     强引用：不会被回收
+     弱引用：gc回收器触发会被回收
+     软引用：系统检测内存不足时会被回收
+     虚引用：等于null

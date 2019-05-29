@@ -1,0 +1,51 @@
+ 
+ ==================================动画集=======================================
+ 
+ //缩放动画
+        ScaleAnimation sa = new ScaleAnimation(
+                0,
+                3,
+                0,
+                3,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f
+        );
+        //旋转动画
+        RotateAnimation ra = new RotateAnimation(
+                0, 720,
+                Animation.RELATIVE_TO_SELF
+                , 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+        );
+        //透明渐变动画
+        AlphaAnimation aa = new AlphaAnimation(0.5f, 1.0f);
+        //平移动画
+        TranslateAnimation ta = new TranslateAnimation(
+                0,
+                100,
+                0,
+                100
+        );
+        //是否保持原来的状态
+        ta.setFillAfter(false);
+        sa.setFillAfter(false);
+        ra.setFillAfter(false);
+        aa.setFillAfter(false);
+        //动画的执行时长
+        ta.setDuration(4000);
+        sa.setDuration(4000);
+        ra.setDuration(4000);
+        aa.setDuration(4000);
+//        img.startAnimation(aa);
+//        img.startAnimation(ra);
+//        img.startAnimation(sa);
+        //添加动画集合集
+        AnimationSet animationSet = new AnimationSet(true);
+     
+        animationSet.addAnimation(sa);
+        animationSet.addAnimation(ra);
+        animationSet.addAnimation(aa);
+        animationSet.addAnimation(ta);
+        //开启动画
+        img.startAnimation(animationSet);

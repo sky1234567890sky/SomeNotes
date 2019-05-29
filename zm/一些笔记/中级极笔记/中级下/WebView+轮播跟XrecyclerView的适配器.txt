@@ -1,0 +1,82 @@
+==============================》web.xml
+    android:orientation="vertical"
+    tools:context="com.play.administrator.wanandroid.WebViewctivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlue" />
+
+    <WebView
+        android:id="@+id/wv"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+</LinearLayout>
+=================>wdb.java
+public class WebViewctivity extends AppCompatActivity {
+    private String murl;
+    private Toolbar mToolweb;
+    private WebView mWev;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_web_viewctivity);
+        gerData();
+        initView();
+    }
+    private void gerData() {
+        murl = getIntent().getStringExtra("url");
+        Log.e("Main", "url:" + murl);
+    }
+    private void initView() {
+        mToolweb = (Toolbar) findViewById(R.id.toolbar);
+        // 为 Tool 添加导航图标
+        mToolweb.setTitle("");
+        setSupportActionBar(mToolweb);
+        mToolweb.setNavigationIcon(R.drawable.left);
+        // 为 导航图标添加点击事件
+        mToolweb.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
+        mWev = (WebView) findViewById(R.id.wv);
+        // 获取 web设置
+        WebSettings settings = mWev.getSettings();
+        // 设置可使用 java代码
+        settings.setJavaScriptEnabled(true);
+//        /设配手机屏幕
+        //支持viewport标签适配手机屏幕
+        mWev.setWebViewClient(new WebViewClient());
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        mWev.loadUrl(murl);
+        
+        mWev.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                mToolweb.setTitle(title);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mWev.goBack();
+    }
+}
+=========================》
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,189 @@
+d2j-dex2jar.bat classes.dex
+
+
+<!--这是基础款,没有添加header,和footer,默认使用经典的刷新和加载-->
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/reforeshLayout"
+        app:srlEnableClipFooterWhenFixedBehind="true"
+        app:srlEnableScrollContentWhenLoaded="true"
+        >
+        <!--&lt;!&ndash;盒子掉落的样式 &ndash;&gt;-->
+        <com.scwang.smartrefresh.header.DropBoxHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.scwang.smartrefresh.header.DropBoxHeader>
+
+        <!--减少篇幅,其余代码和上图代码块一只,只是DropBoxHeader换成了DeliveryHeader-->
+        <!--气球的样式-->
+        <!--<com.scwang.smartrefresh.header.DeliveryHeader-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
+
+        <!--srlHeaderMaxDragRate=2.5时候WaterDropHeader的下拉效果最好-->
+        <!--苹果水滴的样式-->
+        <!--<com.scwang.smartrefresh.header.WaterDropHeader-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
+
+        <!--全屏水波的样式 -->
+        <!--<com.scwang.smartrefresh.header.WaveSwipeHeader-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
+        <!--金色校园的样式 -->
+        <!--<com.scwang.smartrefresh.header.PhoenixHeader-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            ></android.support.v7.widget.RecyclerView>
+        <!--经典的加载样式-->
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.scwang.smartrefresh.layout.footer.ClassicsFooter>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+Activity中两个fragment之间的传值:在Activity中给传值对象用bundle传；
+
+///进入app
+ getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
+//        getSupportActionBar().hide();//隐藏标题栏
+        setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
+        //创建子线程
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (in>0){
+                                    in--;
+                                    mMainBtn.setText(in+"跳过");
+                                }else{
+                                    timer.cancel();
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
+                        });
+                    }
+                },1000,1000);
+//                try {
+////                    sleep(5000);
+////                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+////                    startActivity(intent);
+////                    finish();
+//
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+            }
+        }.start();
+    }
+
+    @OnClick(R.id.main_btn)
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.main_btn:
+                timer.cancel();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
+    }
+
+
+=================================》
+回退棧只在Acticity之閒返回上一級，而在Fragment之間不會返回上一個fragment而只跳轉不顯示Fragment了
+
+回退棧案例
+ shouyeFragment = new ShouyeFragment();
+        likeFragment = new LikeFragment();
+        remenFragment = new RemenFragment();
+        guanyuFragment = new GuanyuFragment();
+
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction
+                .add(R.id.fragment,shouyeFragment,"shouyeFragment")//回退栈方法二
+                .addToBackStack("shouyeFragment")//  添加 任务栈
+                .add(R.id.fragment,likeFragment,"likeFragment")
+                .addToBackStack("likeFragment")//  添加 任务栈
+                .add(R.id.fragment,remenFragment,"remenFragment")
+                .addToBackStack("remenFragment")
+                .add(R.id.fragment,guanyuFragment,"guanyuFragment")
+                .addToBackStack("guanyuFragment");
+        fragmentTransaction.show(shouyeFragment).hide(likeFragment).hide(remenFragment).hide(guanyuFragment);
+
+        //传值fragment跟fragnent的传值要在Activity中设置
+        Bundle bundle = new Bundle();
+        bundle.putString("key","1111");
+        guanyuFragment.setArguments(bundle);
+
+//        fragmentTransaction.addToBackStack(null);//回退栈方法一
+        fragmentTransaction.commit();
+
+        mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.btn1:
+                        mTol.setTitle(R.string.app_shouye);
+                        getSupportFragmentManager().beginTransaction()
+                                .show(shouyeFragment).hide(likeFragment).hide(remenFragment).hide(guanyuFragment).commit();
+                        break;
+                    case R.id.btn2:
+	//设置Toolbar标题以及fragment显示隐藏
+                        mTol.setTitle(R.string.app_shoucang);
+                        getSupportFragmentManager().beginTransaction().show(likeFragment).hide(shouyeFragment).hide(remenFragment).hide(guanyuFragment).commit();
+                        break;
+                    case R.id.btn3:
+                        mTol.setTitle(R.string.app_remen);
+                        getSupportFragmentManager().beginTransaction().show(remenFragment).hide(likeFragment).hide(shouyeFragment).hide(guanyuFragment).commit();
+                        break;
+                    case R.id.btn4:
+                        mTol.setTitle(R.string.app_guanyu);
+                        getSupportFragmentManager().beginTransaction().show(guanyuFragment).hide(likeFragment).hide(remenFragment).hide(shouyeFragment).commit();
+                        break;
+                }
+            }
+        });
+    }
+//在acticity中重写此方法可以解决回退栈返回上一级的平级fragment不显示问题；
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        Log.i("tag", "onBackPressed: "+backStackEntryCount);
+        if (backStackEntryCount>0){
+            getSupportFragmentManager().popBackStack();
+        }else{
+            finish();
+        }
+
+    }
+================================================》
+//三个点（TextView文本后面的三个点）
+	android:singleLine="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:lineSpacingExtra="3dp"
+
+

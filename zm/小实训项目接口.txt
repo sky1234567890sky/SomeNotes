@@ -1,0 +1,38 @@
+1、知乎：
+http://news-at.zhihu.com/api/4/
+2)最新日报
+news/latest
+5)专栏日报
+sections 
+7热门日报
+news/hot
+
+2、微信精选
+http://api.tianapi.com/
+1)wxnew(http://api.tianapi.com/wxnew/?key=52b7ec3471ac3bec6846577e79f20e4c&num=10&page=1)
+参数：key=52b7ec3471ac3bec6846577e79f20e4c
+          num(每页的数量)
+          page(页码)
+3干活集中营
+http://gank.io/api/
+1)技术文章列表
+    数据类型(tech)：Android | iOS | 休息视频 | 福利 | 拓展资源 | 前端 | 瞎推荐 | App|all
+    请求个数(num)： 数字，大于0
+    第几页(page)：数字，大于0
+data/{tech}/{num}/{page}
+
+
+
+
+4.稀土掘金
+http://gank.io/api/search/query/{搜索字段}/category/Android/count/10/page/1
+注：
+    category 后面可接受参数 all | Android | iOS | 休息视频 | 福利 | 拓展资源 | 前端 | 瞎推荐 | App
+    count 最大 50
+
+
+
+
+
+
+

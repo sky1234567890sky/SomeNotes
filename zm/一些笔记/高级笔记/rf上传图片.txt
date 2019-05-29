@@ -1,0 +1,92 @@
+  //myServer类
+  public interface MyServer {
+
+    String path = "http://yun918.cn/study/public/";
+    @Multipart
+    @POST("file_upload.php")
+    Observable<ArtDatas>getDatas(@Part("key") RequestBody key,@Part MultipartBody.Part file);
+
+
+}
+  
+  ============
+  
+   private void initView() {
+        btn = (Button) findViewById(R.id.btn);
+        img = (ImageView) findViewById(R.id.img);
+
+        btn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn:
+                initData();
+                break;
+        }
+    }
+
+    private void initData() {
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+
+            getData();
+
+        }else{
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode==100&& grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            getData();
+        }
+    }
+
+    private void getData() {
+        File file = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            File sd = Environment.getExternalStorageDirectory();
+            ///storage/emulated/legacy/chenyifaer.jpg
+           file = new File(sd, "chenyifaer.jpg");
+        }
+        //普通参数
+        RequestBody requestBodystr = RequestBody.create(MediaType.parse("application/octet-stream"),"我是陈一发儿");
+        //文件参数
+        RequestBody requestBody1file = RequestBody.create(MediaType.parse("image/jpg"), file);
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestBody1file);
+
+        Retrofit rf = new Retrofit.Builder()
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(MyServer.path)
+                .build();
+
+        rf.create(MyServer.class).getDatas(requestBodystr,body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ArtDatas>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+                    @Override
+                    public void onNext(ArtDatas artDatas) {
+                        ArtDatas.DataBean data = artDatas.getData();
+                        Log.i("tag", "数据: "+data.toString());
+                        Glide.with(MainActivity.this).load(data.getUrl()).into(img);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(MainActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+}

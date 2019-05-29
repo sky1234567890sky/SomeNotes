@@ -1,0 +1,170 @@
+================MainActivity =================》
+
+Fragment+底部导航切换页面
+
+   private RadioButton mMainBt4;
+    private RadioGroup mMainRg;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+    }
+
+    private void initView() {
+        mMainVp = (ViewPager) findViewById(R.id.main_vp);
+        mMainBt1 = (RadioButton) findViewById(R.id.main_bt1);
+        mMainBt2 = (RadioButton) findViewById(R.id.main_bt2);
+        mMainBt3 = (RadioButton) findViewById(R.id.main_bt3);
+        mMainBt4 = (RadioButton) findViewById(R.id.main_bt4);
+        mMainRg = (RadioGroup) findViewById(R.id.main_rg);
+
+        mMainBt1.setChecked(true);
+
+        //数据源
+        ArrayList<Fragment> list = new ArrayList<>();
+        list.add(new BlankFragment_1());
+        list.add(new BlankFragment_2());
+        list.add(new BlankFragment_3());
+        list.add(new BlankFragment_4());
+        //适配器
+        MyAdapter myAdapter = new MyAdapter(getSupportFragmentManager(), list);
+
+
+        //绑定适配器
+        mMainVp.setAdapter(myAdapter);
+
+        //viewPager的滑动监听
+        mMainVp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+            @Override
+            public void onPageSelected(int position) {
+                RadioButton btn = (RadioButton) mMainRg.getChildAt(position);
+                btn.setChecked(true);
+方法二
+///((RadioButton)mRg.getChildAt(position)).performClick();
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        
+        //底部导航选择监听  RadioGroup 选择监听
+        mMainRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.main_bt1:
+                        mMainVp.setCurrentItem(0);
+                        break;
+
+                    case R.id.main_bt2:
+                        mMainVp.setCurrentItem(1);
+                        break;
+
+                    case R.id.main_bt3:
+                        mMainVp.setCurrentItem(2);
+                        break;
+
+                    case R.id.main_bt4:
+                        mMainVp.setCurrentItem(3);
+                        break;
+                }
+            }
+        });
+
+
+    }
+    ---------XML布局中-------------------------------》
+    <LinearLayout
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:id="@+id/main_vp"
+        >
+    </android.support.v4.view.ViewPager>
+    <RadioGroup
+        android:id="@+id/main_rg"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        >
+        <RadioButton
+            android:id="@+id/main_bt1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="1"
+            android:textSize="30sp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            />
+        <RadioButton
+            android:id="@+id/main_bt2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="2"
+            android:textSize="30sp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            />
+        <RadioButton
+            android:id="@+id/main_bt3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="3"
+            android:textSize="30sp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            />
+        <RadioButton
+            android:id="@+id/main_bt4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="4"
+            android:textSize="30sp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            />
+    </RadioGroup>
+</LinearLayout>
+==================>
+
+(自定义适配器MyAdapter类)
+public class MyAdapter extends FragmentPagerAdapter{
+    private ArrayList<Fragment> list;
+    public MyAdapter(FragmentManager fm, ArrayList<Fragment> list) {
+        super(fm);
+        this.list = list;
+    }
+
+    public MyAdapter(FragmentManager fm) {
+        super(fm);
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+        return list.get(position);
+    }
+
+    @Override
+    public int getCount() {
+        return list.size();
+    }
+}
+
+==================>
+然后写几个Fragment就行了
+    

@@ -1,0 +1,18 @@
+//1,rf上传图片文件 fafa ="application/octet-stream","name"（RequestBody.create(pare,"明明")对象）
+
+        //2，上传文件类型jpg,file（requestBody.create(jpg,file)）
+
+        //3,上传文件参数 file1= MultipartBody.Part.createFormData("参数名"，"获取file的名字"，文件类型对象)
+
+        //4.创建rf对象(fafa, file1)
+
+        //5.上传文件
+     
+        ========================
+         //1.创建okhttpclient().bile()对象
+           //2.ok上传文件类型jpg（呢哇RequestBody.create(MediaType.parse("image/jpg"),file);）
+                //3.上传的文件参数（MultipartBody.Builder().setType(MultipartBody.FORM)
+                // .add("key","zidingyi").add("file",file.getName,requestBody).build();）
+                //4.创建请求体对象；(Request.Builder())
+                   //5.new Call对象进行异步请求上传数据
+           

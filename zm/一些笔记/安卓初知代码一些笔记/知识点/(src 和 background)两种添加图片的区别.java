@@ -1,0 +1,6 @@
+常识：src属性和background属性的区别
+
+①background通常指的都是背景,而src指的是内容!!
+
+②当使用src填入图片时,是按照图片大小直接填充,并不会进行拉伸
+而使用background填入图片,则是会根据ImageView给定的宽度来进行拉伸

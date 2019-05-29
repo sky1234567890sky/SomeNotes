@@ -1,0 +1,114 @@
+==========================================》BitmapFactory图片变换处理
+//Matrix简介：对于一个图片变换的处理，需要Matrix类的支持，它位于"android.graphics.Matrix"包下，
+是Android提供的一个矩阵工具类，它本身不能对图像或View进行变换，
+但它可与其他API结合来控制图形、View的变换，如Canvas。
+mainActivity主页面代码
+private void initView() {
+        setSkew = (Button) findViewById(R.id.setSkew);
+        setTranslate = (Button) findViewById(R.id.setTranslate);
+        setRotate = (Button) findViewById(R.id.setRotate);
+        setScale = (Button) findViewById(R.id.setScale);
+        img1 = (ImageView) findViewById(R.id.img1);
+        img2 = (ImageView) findViewById(R.id.img2);
+
+        setSkew.setOnClickListener(this);
+        setTranslate.setOnClickListener(this);
+        setRotate.setOnClickListener(this);
+        setScale.setOnClickListener(this);
+
+        baseBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.a);
+        img1.setImageBitmap(baseBitmap);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.setSkew://倾斜
+                ImgUtils.bitmapSkew(baseBitmap,0.2f,0.2f,img2);
+                break;
+
+            case R.id.setTranslate:
+                ImgUtils.bitmapTranslate(baseBitmap,200,200,img2);
+                break;
+
+            case R.id.setRotate:
+                ImgUtils.bitmapRotate(baseBitmap,180,img2);
+                break;
+            case R.id.setScale:
+                ImgUtils.bitmapScale(baseBitmap,3.0f,2.0f,img2);
+                break;
+        }
+    }
+    
+    ======》工具类
+    
+    public class ImgUtils {
+    /**
+     * 缩放图片
+     */
+    public static void bitmapScale(Bitmap baseBitmap, float x, float y, ImageView iv_after) {
+        // 因为要将图片放大，所以要根据放大的尺寸重新创建Bitmap,Android不允许对原图进行处理
+        Bitmap afterBitmap = Bitmap.createBitmap(
+        (int) (baseBitmap.getWidth() * x),
+        (int) (baseBitmap.getHeight() * y), baseBitmap.getConfig());
+        Canvas canvas = new Canvas(afterBitmap);
+        // 初始化Matrix对象
+        Matrix matrix = new Matrix();
+        // 根据传入的参数设置缩放比例
+
+        matrix.setScale(x, y);
+        // 根据缩放比例，把图片draw到Canvas上
+
+        canvas.drawBitmap(baseBitmap, matrix,new Paint());
+
+        iv_after.setImageBitmap(afterBitmap);
+    }
+    /**
+     * 图片旋转
+     */
+    public static void bitmapRotate(Bitmap baseBitmap, float degrees,ImageView iv_after) {
+        // 创建一个和原图一样大小的图片
+        Bitmap afterBitmap = Bitmap.createBitmap(baseBitmap.getWidth(), baseBitmap.getHeight(), baseBitmap.getConfig());
+        Canvas canvas = new Canvas(afterBitmap);
+        Matrix matrix = new Matrix();
+        // 根据原图的中心位置旋转
+        matrix.setRotate(degrees, baseBitmap.getWidth() / 2,baseBitmap.getHeight() / 2);
+        canvas.drawBitmap(baseBitmap, matrix, new Paint());
+        iv_after.setImageBitmap(afterBitmap);
+    }
+    /**
+     * 图片移动
+     */
+    public static void bitmapTranslate(Bitmap baseBitmap,float dx, float dy,ImageView iv_after) {
+        // 需要根据移动的距离来创建图片的拷贝图大小
+        Bitmap afterBitmap = Bitmap.createBitmap(
+        (int) (baseBitmap.getWidth() + dx),
+        (int) (baseBitmap.getHeight() + dy), baseBitmap.getConfig());
+        Canvas canvas = new Canvas(afterBitmap);
+        Matrix matrix = new Matrix();
+        // 设置移动的距离
+          matrix.setTranslate(dx, dy);
+        canvas.drawBitmap(baseBitmap, matrix, new Paint());
+        iv_after.setImageBitmap(afterBitmap);
+    }
+    
+    /**
+     * 倾斜图片
+     */
+    protected static void bitmapSkew(Bitmap baseBitmap,float dx, float dy,ImageView iv_after) {
+        // 根据图片的倾斜比例，计算变换后图片的大小，
+        Bitmap afterBitmap = Bitmap.createBitmap(baseBitmap.getWidth()
++ (int) (baseBitmap.getWidth() * dx), baseBitmap.getHeight()
+                + (int) (baseBitmap.getHeight() * dy), baseBitmap.getConfig());
+        Canvas canvas = new Canvas(afterBitmap);
+        Matrix matrix = new Matrix();
+        // 设置图片倾斜的比例
+        matrix.setSkew(dx, dy);
+
+        canvas.drawBitmap(baseBitmap, matrix, new Paint());
+        iv_after.setImageBitmap(afterBitmap);
+    }
+
+}
+    

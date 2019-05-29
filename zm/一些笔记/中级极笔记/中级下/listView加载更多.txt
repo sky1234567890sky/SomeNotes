@@ -1,0 +1,47 @@
+
+
+        //滑动监听
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            //判断是否是  最后一条
+            boolean flag = false;
+            // 滑动状态
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                // 最后一条
+                // 静止 并且 没有操作
+
+                // scrollState  滑翔
+                //  SCROLL_STATE_TOUCH_SCROLL     手指触碰                    TOUCH  碰
+                // SCROLL_STATE_IDLE   静止  并且没有操作
+                if( scrollState == SCROLL_STATE_IDLE && flag){
+                    /*Log.i("tag","===》加载更多 ");
+                    //  给 适配器的 集合   数据源  添加  数据
+                    // 刷新适配器
+                    for (int i= 0;i< 10;i++){
+                        list.add("测试--> " +i);
+                    }*/
+                    //  弹窗   正在加载数据
+
+                    //网络请求
+                    // 和第一次的网络请求的区别    0 变成 1
+                    page++;
+                    getHttpData(page,1);
+                    myAdapter.notifyDataSetChanged();
+                    flag = false;
+                }
+
+            }
+            // 滑动
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                // firstVisibleItem   第一条可视的条目
+                // visibleItemCount   屏幕可视的条目数量
+                // totalItemCount    总条目数量
+                if(firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount >0){
+                    flag = true;
+                }
+            }
+        });
+    }

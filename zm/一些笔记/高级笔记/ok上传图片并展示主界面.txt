@@ -1,0 +1,81 @@
+
+
+ private void initView() {
+        btn = (Button) findViewById(R.id.btn);
+        iv = (ImageView) findViewById(R.id.iv);
+        btn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn:
+                initData();
+                break;
+        }
+    }
+    private void initData() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            uploading();
+        }else{
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode ==100&& grantResults.length>0&&grantResults[0] ==PackageManager.PERMISSION_GRANTED){
+            //上传文件
+            uploading();
+        }
+    }
+    private void uploading() {
+        File file = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            File sd = Environment.getExternalStorageDirectory();
+///storage/emulated/legacy/baobao1.jpg
+            file = new File(sd, "baobao1.jpg");
+        }
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        MediaType parse = MediaType.parse("image/jpg");
+//请求体
+        RequestBody requestBody = RequestBody.create(parse,file);
+
+        MultipartBody build = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("key", "H1809A")
+                .addFormDataPart("file",file.getName(),requestBody)
+                .build();
+//file_upload.php
+        Request request = new Request.Builder()
+                .url("http://yun918.cn/study/public/file_upload.php")
+                .post(build)
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "错误日志: "+e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String string = response.body().string();
+
+                Beans beans = new Gson().fromJson(string, Beans.class);
+                final Beans.DataBean data = beans.getData();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i(TAG, "data: +"+data.toString());
+                        Glide.with(MainActivity.this).load(data.getUrl()).into(iv);
+                    }
+                });
+            }
+        });
+
+    }

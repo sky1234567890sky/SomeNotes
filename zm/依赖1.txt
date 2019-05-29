@@ -1,0 +1,102 @@
+//XReclerView依赖
+    implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
+    //TabLayout依赖 && 侧滑菜单
+    implementation 'com.android.support:design:27.1.1'
+    //解析图片依赖
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    //轮播图依赖
+    implementation 'com.youth.banner:banner:1.4.10'
+    //Gson解析依赖
+    implementation 'com.google.code.gson:gson:2.2.4'
+    //OK
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    //数据库 Greendao
+    implementation 'org.greenrobot:greendao:3.2.2'
+    //rxjava  观察者
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.0.7'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    //butterknife
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+
+
+
+android.enableAapt2=false
+
+
+
+//RecyclerView列表/侧滑菜单/TabLayout共用
+implementation 'com.android.support:recyclerview-v7:27.1.1' 
+implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
+implementation'com.android.support:design:27.1.1'   
+   
+//SmartRefreshLayout上拉加载下拉刷新
+compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'//不使用特殊Header，可以不加这行   
+
+//Glide解析图片3.0版本
+implementation 'com.github.bumptech.glide:glide:3.8.0'		
+//banner轮播图须和Glide解析图片一起使用
+implementation 'com.youth.banner:banner:1.4.10'  
+
+//cardview卡片
+implementation 'com.android.support:cardview-v7:27.1.1'
+
+//OKHttp和Retrofit
+implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+implementation 'com.squareup.retrofit2:converter-gson:2.3.0'//Retrofit解析所用依赖
+implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+
+//RxJava结合Retrofit
+implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
+implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+implementation 'com.squareup.retrofit2:converter-gson:2.3.0'//转换器，请求结果自动解析转换成Model
+implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'//配合Rxjava 使用
+implementation 'com.google.code.gson:gson:2.8.1'//Gson解析
+
+//ButterKnife依赖
+implementation 'com.jakewharton:butterknife:8.8.1'
+annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    
+//EventBus事件总线传值切换线程依赖
+implementation 'org.greenrobot:eventbus:3.0.0'
+//硬盘缓存
+compile 'com.jakewharton:disklrucache:2.0.2'
+
+//数据库
+1.工程配置:添加插件
+classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' //db
+2.项目配置:添加插件
+apply plugin: 'org.greenrobot.greendao' //db
+3.项目配置:添加依赖
+implementation 'org.greenrobot:greendao:3.2.2' //db
+4.初始化GreenDao配置
+	greendao{
+	    schemaVersion 1 //数据库版本号
+	    daoPackage 'com.example.lizhengjun.dao'  //数据库全路径
+	    targetGenDir 'src/main/java'  //存放位置
+    }	
+
+	
+	               *网络图片处理*
+//Glide4.0版本
+implementation 'com.github.bumptech.glide:glide:4.9.0'
+//复杂图片处理第三方依赖
+implementation 'jp.wasabeef:glide-transformations:4.0.0'
+implementation 'jp.co.cyberagent.android:gpuimage:2.0.0'
+//网址:https://github.com/wasabeef/glide-transformations
+
+//Picasso 用法与Glide一模一样
+implementation 'com.squareup.picasso:picasso:2.5.2'
+
+//Fresco 使用SimpleDraweeView控件
+implementation 'com.facebook.fresco:fresco:1.12.1'

@@ -1,0 +1,244 @@
+﻿1.设计模式分类、写出8个常用设计模式？
+	创建型、结构型、行为型
+
+	Factory（工厂模式），Builder（建造模式），FactoryMethod（工厂方法模式），
+	Prototype（原始模型模式），Singleton（单例模式），Facade（门面模式），
+	Adapter（适配器模式），Bridge（桥梁模式），Composite（合成模式），
+	Decorator（装饰模式），Flyweight（享元模式），Proxy（代理模式），
+	Command（命令模式），Interpreter（解释器模式），Visitor（访问者模式），
+	Iterator（迭代子模式），Mediator（调停者模式），Memento（备忘录模式），
+	Observer（观察者模式），State（状态模式），Strategy（策略模式），
+	TemplateMethod（模板方法模式），ChainOfResponsibleity（责任链模式）
+	
+
+2.面向对象的三大特性、五大原则？
+	面向对象的三大基本特征为：封装、继承、多态
+	单一职责原则，开放封闭原则，里氏替换原则，依赖倒置原则，
+接口隔离原则。
+
+
+3.MVP以及MVC各自之间的作用？
+	MVC:
+		MVC是比较直观的架构模式，用户操作->View（负责接收用户的输入操作）->Controller（业务逻辑处理）->Model（数据持久化）->View（将结果反馈给View）。
+	MVP:
+		MVP是把MVC中的Controller换成了Presenter（呈现），目的就是为了完全切断View跟Model之间的联系，由Presenter充当桥梁，做到View-Model之间通信的完全隔离。
+
+4.手写单例模式
+	public class Singleton {  
+	    private volatile static Singleton singleton;  
+	    private Singleton (){}  
+	    public static Singleton getSingleton() {  
+	    if (singleton == null) {  
+	        synchronized (Singleton.class) {  
+	        if (singleton == null) {  
+	            singleton = new Singleton();  
+	        }  
+	        }  
+	    }  
+	    return singleton;  
+	    }  
+	}
+
+
+5.版本控制工具
+	版本控制是一种记录一个或若干文件内容变化，
+以便将来查阅特定版本修订情况以及回溯的系统。
+	1.本地版本控制系统(RCS)
+	2.集中化的版本控制系统（SVN）
+	3.分布式版本控制系统（Git）
+	
+
+
+6.三级缓存
+	Lru算法的实现就是通过LinkedHashMap来实现的，
+它使用了一个双向链表来存储Map中的Entry顺序关系，这种顺序有两种，
+一种是LRU顺序，一种是插入顺序。通过LRU顺序实现“最近最少使用”
+	
+	内存缓存（LruCache）、硬盘缓存（DiskLruCache）、网络缓存
+
+	加载数据时，
+		判断内存中是否有数据：
+			有：使用内存数据；
+			没有：
+				判断硬盘中是否有数据：
+					有：使用硬盘数据，同时保存到内存一份
+					没有：加载网络数据，同时将数据保存到内存和硬盘中各一份
+
+
+7.数据结构
+   数组：内存中连续，有索引，查询快，增删慢
+   链表：通过结点连接，查询慢，增删快（单向链表、双向链表、（单双向）循环链表）
+   栈：出入为同一端，先进后出，入栈压栈、出栈弹栈
+   队列：数据一端插入、另一端取出，先进先出
+   哈希表：底层有数组和链表组成，保证数据唯一性
+   二叉树：可以实现排序，同时保证数据唯一，遍历方式（先序，中序，后序）
+
+8.RXJava操作符
+	1、创建操作符：from、just、interval、range、repeat
+	2、变换操作符：map、flatMap、concatMap、cast
+	3、过滤操作符：filter、elementAt、distinct、skip、ignoreElements
+	4、组合操作符：startWith、merge、concat、zip
+	5、辅助操作符：delay、do、subscribeOn、unsubscribeOn、observeOn、timeout
+	6、布尔操作符：all、contains、isEmpty、exists、sequenceEqual
+	7、转换操作符：toList、toSortedList、toMap
+
+
+9、线程有几种状态,分别是哪些?
+	答: 1)新建状态(New)：新创建了一个线程对象。
+		2)就绪状态(Runnable)：线程对象创建后，其他线程调用了该对象的start()方法。该状态的线程位于可运行线程池中，变得可运行，等待获取CPU的使用权。
+		3)运行状态(Running)：就绪状态的线程获取了CPU，执行run()方法。
+		4)阻塞状态(Blocked)：阻塞状态是线程因为某种原因放弃CPU使用权，暂时停止运行。直到线程进入就绪状态，才有机会转到运行状态。阻塞的情况分三种：
+			①等待阻塞：运行的线程执行wait()方法，JVM会把该线程放入等待池中。
+			②同步阻塞：运行的线程在获取对象的同步锁时，若该同步锁被别的线程占用，则JVM会把该线程放入锁池中。
+			③其他阻塞：运行的线程执行sleep()或join()方法，或者发出了I/O请求时，JVM会把该线程置为阻塞状态。当sleep()状态超时、join()等待线程终止或者超时、或者I/O处理完毕时，线程重新转入就绪状态。
+		5)死亡状态(Dead)：线程执行完了或者因异常退出了run()方法，该线程结束生命周期。
+		当调用start方法的时候，该线程就进入就绪状态。等待CPU进行调度执行，此时还没有真正执行线程。
+
+
+10、同步和异步有何异同，在什么情况下分别使用他们？举例说明?
+	同步请求：发送一个请求需要等待返回才能够发送下一个请求有等待过程；
+	异步请求：发送一个请求，不需要等待随时可已发送下一条请求；
+
+    同步是阻塞式的，是在当前线程执行
+	异步是并发式的，它会自动启动一个新的线程处理逻辑
+
+
+1、Android的四大组件是哪些，它们的作用？
+	Activity：Activity是Android程序与用户交互的窗口，是Android构造块中最基本的一种，它需要为保持各界面的状态，做很多持久化的事情，妥善管理生命周期以及一些跳转逻辑
+	service：后台服务于Activity，封装有一个完整的功能逻辑实现，接受上层指令，完成相关的事务，定义好需要接受的Intent提供同步和异步的接口
+	Content Provider：是Android提供的第三方应用数据的访问方案，可以派生Content Provider类，对外提供数据，可以像数据库一样进行选择排序，屏蔽内部数据的存储细节，向外提供统一的接口模型，大大简化上层应用，对数据的整合提供了更方便的途径
+	BroadCast Receiver：接受一种或者多种Intent作触发事件，接受相关消息，做一些简单处理，转换成一条Notification，统一了Android的事件广播模型
+
+2.Retrofit2常用注解有哪些？
+
+	请求方式：
+		@GET 	       GET请求
+		@POST 	       POST请求
+
+	请求头：
+		@Headers("K:V") 添加请求头，作用于方法
+		@Header("K")    添加请求头，参数添加头
+		@FormUrlEncoded 用表单数据提交，搭配参数使用
+		@Stream			下载
+		@Multipart	    用文件上传提交   multipart/form-data
+
+	请求参数：
+		@Query 	        替代参数值，通常是结合get请求的
+		@QueryMap 	    替代参数值，通常是结合get请求的
+		@Field 	        替换参数值，是结合post请求的
+		@FieldMap 	    替换参数值，是结合post请求的
+
+	请求路径：
+		@Path 	        替换路径
+		@Url 	    	路径拼接
+
+	请求体：
+		@Body(RequestBody)  设置请求体，是结合post请求的
+
+	文件处理：
+		@Part Multipart.Part
+		@Part("key") RequestBody requestBody(单参)
+		@PartMap Map<String,RequestBody> requestBodyMap(多参)
+		@Body RequestBody requestBody(自定义参数)
+
+
+
+3.C/S和C/B结构 
+	1.C/S（客户端/服务器模式）：
+	客户端和服务器都是独立的计算机，客户端是面向最终用户的应用程序或一些接口设备，
+	服务器是连入网络的计算机，负责向其他计算机提供各种网络服务。
+	2.B/S（浏览器/服务器模式）：
+	是一种网络结构模式，将系统大部分的逻辑功能集中到服务器上，客户端只实现极少的事务逻辑，使系统的开发和维护都更简洁。
+	3.两者比较：
+	（1）C/S是建立在局域网上的，B/S是建立在广域网上的
+	（2）C/S的软件重用性没有B/S的好
+	（3）C/S结构的系统的升级困难，要实现升级可能要重新实现一个系统，B/S结构中可以实现系统的无缝升级，降低维护的开销，升级简单
+	（4）B/S结构使用浏览器作为展示的界面，表现的更加丰富，C/S的表现有局限性
+	（5）C/S结构和操作系统相关，B/S结构可以面向不同的用户群，与操作系统的关系较小。
+
+
+4、http和https的区别？
+
+	1、https协议需要到ca申请证书，一般免费证书较少，因而需要一定费用。
+	2、http是超文本传输协议，信息是明文传输，https则是具有安全性的ssl加密传输协议。
+	3、http和https使用的是完全不同的连接方式，用的端口也不一样，前者是80，后者是443。
+	4、http的连接很简单，是无状态的；HTTPS协议是由SSL+HTTP协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。
+
+
+5、线程和进程有什么区别？
+
+	（1）线程是CPU独立运行和独立调度的基本单位；
+	（2）进程是资源分配的基本单位；
+	两者的联系：进程和线程都是操作系统所运行的程序运行的基本单元。
+	区别：
+	（1）进程具有独立的空间地址，一个进程崩溃后，在保护模式下不会对其它进程产生影响。
+	（2）线程只是一个进程的不同执行路径，线程有自己的堆栈和局部变量，但线程之间没有单独的地址空间，一个线程死掉就等于整个进程死掉。
+
+
+6、Serializable和Parcelable的区别
+	在使用内存的时候，Parcelable 类比Serializable性能高，所以推荐使用Parcelable类。
+	1．Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC。
+	2．Parcelable不能使用在要将数据存储在磁盘上的情况。尽管Serializable效率低点，但在这
+	种情况下，还是建议你用Serializable 。
+	实现：
+	1．Serializable 的实现，只需要继承 Serializable 即可。这只是给对象打了一个标记，系统会
+	自动将其序列化。
+	2．Parcelabel 的实现，需要在类中添加一个静态成员变量 CREATOR，这个变量需要继承
+	Parcelable.Creator 接口
+
+
+7、什么情况下会导致内存泄露
+	Android的虚拟机是基于寄存器的Dalvik，它的最大堆大小一般是16M，有的机器为24M。因
+	此我们所能利用的内存空间是有限的。如果我们的内存占用超过了一定的水平就会出现OutOfMemory的错误。 内存溢出的几点原因：
+	1. 资源释放问题
+	程序代码的问题，长期保持某些资源，如Context、Cursor、IO流的引用，资源得不到释放
+	造成内存泄露。
+	2. 对象内存过大问题
+	保存了多个耗用内存过大的对象（如Bitmap、XML文件），造成内存超出限制。
+	3. static关键字的使用问题
+	static是Java中的一个关键字，当用它来修饰成员变量时，那么该变量就属于该类，而不是
+	该类的实例。所以用static修饰的变量，它的生命周期是很长的，如果用它来引用一些资源耗费
+	过多的实例（Context的情况最多），这时就要谨慎对待了。
+	针对static的解决方案
+	1) 应该尽量避免static成员变量引用资源耗费过多的实例，比如Context。
+	2) Context尽量使用ApplicationContext，因为Application的Context的生命周期比较
+	长，引用它不会出现内存泄露的问题。
+	3) 使用 WeakReference 代替强引用。比如可以使用 WeakReference<Context>
+	mContextRef;
+	4. 线程导致内存溢出
+	线程产生内存泄露的主要原因在于线程生命周期的不可控。
+	针对这种线程导致的内存泄露问题的解决方案：
+	（一） 将线程的内部类，改为静态内部类（因为非静态内部类拥有外部类对象的强引用，而静
+	态类则不拥有）。
+	（二） 在线程内部采用弱引用保存Context引
+
+
+8、Handler机制
+	Android中主线程也叫UI线程，那么从名字上我们也知道主线程主要是用来创建、更新UI的，
+	而其他耗时操作，比如网络访问，或者文件处理，多媒体处理等都需要在子线程中操作，之所以在子
+	线程中操作是为了保证UI的流畅程度，手机显示的刷新频率是60Hz，也就是一秒钟刷新60次，每
+	16.67毫秒刷新一次，为了不丢帧，那么主线程处理代码最好不要超过16毫秒。当子线程处理完数
+	据后，为了防止 UI 处理逻辑的混乱，Android只允许主线程修改 UI，那么这时候就需要 Handler来充当子线程和主线程之间的桥梁了。
+	
+	我们通常将Handler声明在Activity 中，然后覆写Handler中的handleMessage方法,当子线
+	程调用handler.sendMessage()方法后handleMessage方法就会在主线程中执行。
+	这里面除了Handler、Message外还有隐藏的Looper和MessageQueue对象。
+	在主线程中Android默认已经调用了Looper.preper()方法，调用该方法的目的是在Looper中
+	创建 MessageQueue 成员变量并把 Looper 对象绑定到当前线程中。当调用 Handler 的
+	sendMessage（对象）方法的时候就将 Message 对象添加到了 Looper 创建的 MessageQueue
+	队列中，同时给Message指定了target对象，其实这个target对象就是Handler对象。主线程默
+	认执行了Looper.looper（）方法，该方法从Looper的成员变量MessageQueue中取出Message，
+	然后调用Message的target对象的handleMessage()方法。这样就完成了整个消息机制。
+
+9、事件分发机制核心方法
+	dispatchTouchEvent  分发
+	onInterceptTouchEvent  拦截
+	onTouchEvent  响应
+
+
+10、Android中的动画有哪几类，它们的特点和区别是什么
+	Android中动画分：一种是Tween补间动画、一种是Frame帧动画、一种是属性动画。
+	补间动画，这种实现方式可以使视图组件移动、放大、缩小以及产生透明度的变化；
+	帧动画，传统的动画方法，通过顺序的播放排列好的图片来实现，类似电影。
+	属性动画，操作控件对应属性进行变化的动画效果。
+	

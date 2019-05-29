@@ -1,0 +1,263 @@
+libs和一些资源
+
+
+			清单文件
+
+权限：
+
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+
+
+配置：
+
+<!--umeng start-->
+        
+        <!--微信-->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        
+        <!--新浪微博-->
+        <activity
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false"
+            >
+        </activity>
+        <activity android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            >
+
+        </activity>
+        <activity
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:launchMode="singleTask"
+            android:name="com.sina.weibo.sdk.share.WbShareTransActivity">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+        
+        
+        <!--腾讯-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent100424468" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        
+        <!--umeng end-->
+
+
+
+				BaseApp配置//继承Appclication类
+
+
+
+UMConfigure.init(this,"我的AppKey"
+                ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
+
+
+//需要设置各个平台的appkey：
+        PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
+        PlatformConfig.setSinaWeibo("2248884681", "7ed722f6244fb5ce4504b4fe46c394bb","http://sns.whalecloud.com");
+        PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+
+
+
+/*	
+	PlatformConfig.setYixin("yxc0614e80c9304c11b0391514d09f13bf");
+        PlatformConfig.setTwitter("3aIN7fuF685MuZ7jtXkQxalyi", "MK6FEYG63eWcpDFgRYw4w9puJhzDl0tyuqWjZ3M7XJuuG7mMbO");
+        PlatformConfig.setAlipay("2015111700822536");
+        PlatformConfig.setLaiwang("laiwangd497e70d4", "d497e70d4c3e4efeab1381476bac4c5e");
+        PlatformConfig.setPinterest("1439206");
+        PlatformConfig.setKakao("e4f60e065048eb031e235c806b31c70f");
+        PlatformConfig.setDing("dingoalmlnohc0wggfedpk");
+        PlatformConfig.setVKontakte("5764965","5My6SNliAaLxEm3Lyd9J");
+        PlatformConfig.setDropbox("oz8v5apet3arcdy","h7p2pjbzkkxt02a");
+        PlatformConfig.setYnote("9c82bf470cba7bd2f1819b0ee26f86c6ce670e9b");
+
+*/
+
+				签名信息配置
+
+keystore 放在 项目app 目录下
+
+
+build.gradle配置
+
+
+//与  buildTypes  同级
+signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+
+
+
+
+				代码
+
+带面板的分享 shareBorad();
+
+UMImage umImage = new UMImage(this, "https://ws1.sinaimg.cn/large/0065oQSqly1fw8wzdua6rj30sg0yc7gp.jpg");
+
+        //压缩 默认为压缩大小
+        umImage.compressStyle = UMImage.CompressStyle.SCALE;
+
+        new ShareAction(MainActivity.this)
+                .withMedia(umImage)//分享的内容
+                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)//拉起来的平台
+                .setCallback(umShareListener)
+                .open();
+
+
+
+
+
+无面板的分享：share(SHARE_MEDIA type);
+
+UMImage umImage = new UMImage(this, "https://ws1.sinaimg.cn/large/0065oQSqly1fw8wzdua6rj30sg0yc7gp.jpg");
+
+        //压缩 默认为压缩大小
+        umImage.compressStyle = UMImage.CompressStyle.SCALE;
+
+        new ShareAction(MainActivity.this)
+                .withMedia(umImage)//分享的内容
+                .setPlatform(type)
+                .setCallback(umShareListener)
+                .share();
+
+
+
+private UMShareListener umShareListener = new UMShareListener() {
+        //分享开始的回调
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        //分享成功的回调
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(MainActivity.this, "成功了", Toast.LENGTH_LONG).show();
+        }
+
+        //分享失败的回调
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(MainActivity.this, "失败" + t.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        //分享取消的回调
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(MainActivity.this, "取消了", Toast.LENGTH_LONG).show();
+
+        }
+    };
+==================================================================
+//登录
+//一样的需要BaseApp类并在清单中注册
+@Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.login:
+                startActivity(new Intent(this,FenxiangActivity.class));
+                break;
+            case R.id.register:
+                break;
+            case R.id.fenxiang_qq:
+                    getlogin(SHARE_MEDIA.QQ);
+                break;
+            case R.id.fenxiang_wx:
+                getlogin(SHARE_MEDIA.WEIXIN);
+                break;
+            case R.id.fenxiang_xl:
+                getlogin(SHARE_MEDIA.SINA);
+                break;
+        }
+    }
+    //登录
+    private void getlogin(SHARE_MEDIA type) {
+        Log.d(TAG, "点击事件: ");
+        UMShareAPI mShareAPI=UMShareAPI.get(this);
+        mShareAPI.getPlatformInfo(MainActivity.this, type, authListener);
+    }
+    
+    UMAuthListener authListener = new UMAuthListener() {
+        /**
+         * @desc 授权开始的回调
+         * @param platform 平台名称
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+        /**
+         * @desc 授权成功的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         * @param data 用户资料返回
+         */
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+            Toast.makeText(MainActivity.this, "成功了", Toast.LENGTH_LONG).show();
+        }
+        /**
+         * @desc 授权失败的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            Toast.makeText(MainActivity.this, "失败：" + t.getMessage(),                                     Toast.LENGTH_LONG).show();
+        }
+        /**
+         * @desc 授权取消的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            Toast.makeText(MainActivity.this, "取消了", Toast.LENGTH_LONG).show();
+        }
+    };
+
+
+
+
+
+

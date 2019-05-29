@@ -1,0 +1,59 @@
+  //post 拼接+ 请求头   page=1&count=2&type=video（第一种方法）
+  //https://api.apiopen.top/getJoke?page=1&count=2&type=video
+ @Headers("Content-Type:application/x-www-form-urlencoded;charset=utf-8")
+    @POST
+    Call<ResponseBody> postData3(@Url String path,@Body RequestBody body);
+//java代码
+Retrofit re1 = new Retrofit.Builder()
+                .baseUrl(MyServer.pathurl)
+                .build();
+        MyServer myServer = re1.create(MyServer.class);
+        //post请求头
+        MediaType type = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
+        RequestBody requestBody = RequestBody.create(type, "page=1&count=2&type=video");
+        ////https://api.apiopen.top/getJoke?page=1&count=2&type=video
+        Call<ResponseBody> postData3 = myServer.postData3("getJoke?",requestBody);
+        postData3.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    String execute = response.body().string();
+                    Log.i("tag", "initData: "+execute);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+===================================================================》
+
+    //post 拼接+ 第二中方法
+    //@Headers("Content-Type:application/x-www-form-urlencoded;charset=utf-8")
+   // @FormUrlEncoded
+    @POST   ///post 当请求头在括号里是（@Headler）时，不需要添加注释@FormUrlEncoded
+    Call<ResponseBody> postData4(@Url String path,@Body RequestBody body,@Header("Content-Type") String type);
+
+ //post 拼接+ 第二中方法
+        MediaType type2 = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
+        String number="page=1&count=2&type=video";
+        RequestBody requestBody1 = RequestBody.create(type2, number);
+        Call<ResponseBody> call4 = myServer.postData4("getJoke?", requestBody1, "application/x-www-form-urlencoded;charset=utf-8");
+//java代码：
+        call4.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    String execute = response.body().string();
+                    Log.i("tag", "initData: "+execute);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+
+

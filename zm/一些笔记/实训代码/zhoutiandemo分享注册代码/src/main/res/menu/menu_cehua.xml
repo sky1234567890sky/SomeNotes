@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_shouye"
+        android:checkable="true"
+        android:title="@string/shouye"></item>
+    <item
+        android:id="@+id/menu_shoucang"
+        android:checkable="true"
+        android:title="@string/shoucang"></item>
+    <item
+        android:id="@+id/menu_ditu"
+        android:checkable="true"
+        android:title="@string/ditu"></item>
+</menu>

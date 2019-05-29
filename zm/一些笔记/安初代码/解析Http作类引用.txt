@@ -1,0 +1,20 @@
+public class StringUtil {
+    public static String toString(String url){
+        try {
+            URL url1 = new URL(url);
+            HttpURLConnection op = (HttpURLConnection) url1.openConnection();
+            if (op.getResponseCode() == 200){
+                InputStream is = op.getInputStream();
+                byte[] by = new byte[1024];
+                int a = 0;
+                StringBuffer sb = new StringBuffer();
+                while((a = is.read(by))!=-1){
+                    sb.append(new String(by,0,a));
+                }
+                return sb.toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }

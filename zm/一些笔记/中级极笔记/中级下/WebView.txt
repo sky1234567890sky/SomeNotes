@@ -1,0 +1,223 @@
+==============================》
+    android:orientation="vertical"
+    tools:context="com.play.administrator.wanandroid.WebViewctivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlue" />
+
+    <WebView
+        android:id="@+id/wv"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+</LinearLayout>
+=================
+public class WebViewctivity extends AppCompatActivity {
+    private String murl;
+    private Toolbar mToolweb;
+    private WebView mWev;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_web_viewctivity);
+        gerData();
+        initView();
+    }
+    private void gerData() {
+        murl = getIntent().getStringExtra("url");
+        Log.e("Main", "url:" + murl);
+    }
+    private void initView() {
+        mToolweb = (Toolbar) findViewById(R.id.toolbar);
+        // 为 Tool 添加导航图标
+        mToolweb.setTitle("");
+        setSupportActionBar(mToolweb);
+        mToolweb.setNavigationIcon(R.drawable.left);
+        // 为 导航图标添加点击事件
+        mToolweb.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
+        mWev = (WebView) findViewById(R.id.wv);
+        // 获取 web设置
+        WebSettings settings = mWev.getSettings();
+        // 设置可使用 java代码
+        settings.setJavaScriptEnabled(true);
+//        /设配手机屏幕
+        //支持viewport标签适配手机屏幕
+        mWev.setWebViewClient(new WebViewClient());
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        mWev.loadUrl(murl);
+        
+        mWev.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                mToolweb.setTitle(title);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mWev.goBack();
+    }
+}
+=========================》轮播图+XrecyclerView的；适配器（即：多布局）
+public class MainPageAdapter extends RecyclerView.Adapter {
+    public ArrayList<MainPageArticleBean.DataBean.DatasBean> ArticleList;
+    public   ArrayList<BannerBean.DataBean> BannerList;
+    private  Context context;
+    private OnItemClickListener mOnItemClickListener;
+
+    public MainPageAdapter(Context context, ArrayList<MainPageArticleBean.DataBean.DatasBean> list, ArrayList<BannerBean.DataBean> list2) {
+        this.context = context;
+        this.ArticleList = list;
+        this.BannerList = list2;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater from = LayoutInflater.from(parent.getContext());
+        if (viewType == 1){
+            //轮播图
+            View inflate = from.inflate(R.layout.banner_item, null, false);
+            return new BannerVh(inflate);
+        }else{
+            View inflate = from.inflate(R.layout.article_item, null, false);
+            return new ArticleVh(inflate);
+        }
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int itemViewType = getItemViewType(position);
+        if (itemViewType == 1){
+            BannerVh holder1 = (BannerVh) holder;
+            holder1.mBanner.setImages(BannerList);
+            holder1.mBanner.setImageLoader(new ImageLoader() {
+                @Override
+                public void displayImage(Context context, Object path, ImageView imageView) {
+                    BannerBean.DataBean path1 = (BannerBean.DataBean) path;
+                    Glide.with(context).load(path1.getImagePath()).placeholder(R.drawable.icon_banner_place).into(imageView);
+                }
+            });
+            holder1.mBanner.start();
+
+            holder1.mBanner.setOnBannerListener(new OnBannerListener() {
+                @Override
+                public void OnBannerClick(int position) {
+                    String url = BannerList.get(position).getUrl();
+                    Intent intent = new Intent(context, WebActivity.class);
+                    intent.putExtra("url",url);
+                    context.startActivity(intent);
+                }
+            });
+        }else{
+            int newPosition = position;
+            if (BannerList.size() > 0){
+                newPosition = position-1;
+            }
+            ArticleVh holder1 = (ArticleVh) holder;
+            MainPageArticleBean.DataBean.DatasBean datasBean = ArticleList.get(newPosition);
+            holder1.mTvArticleTitle.setText(datasBean.getTitle());
+            holder1.mTvAuthor.setText(datasBean.getAuthor());
+            holder1.mTvTime.setText(datasBean.getNiceDate());
+            holder1.mTvArticleType.setText(datasBean.getSuperChapterName());
+
+            if (datasBean.isFresh()){
+                holder1.mTvNews.setVisibility(View.VISIBLE);
+            }else{
+                holder1.mTvNews.setVisibility(View.INVISIBLE);
+            }
+
+            final int finalNewPosition = newPosition;
+            holder1.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnItemClickListener != null){
+                        mOnItemClickListener.setOnItemClickListener(v, finalNewPosition);
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (BannerList.size() > 0){
+            return ArticleList.size()+1;
+        }else{
+            return ArticleList.size();
+        }
+//        return 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0 && BannerList.size() > 0){
+            return 1;               //轮播图的
+        }else{
+            return 2;               //文章列表的
+        }
+    }
+
+    class BannerVh extends RecyclerView.ViewHolder{
+
+        private final Banner mBanner;
+
+        public BannerVh(View itemView) {
+            super(itemView);
+            mBanner = itemView.findViewById(R.id.banner);
+        }
+    }
+    class ArticleVh extends RecyclerView.ViewHolder{
+
+        private final ImageView mImg2;
+        private final TextView mTvAuthor;
+        private final TextView mTvArticleType;
+        private final TextView mTvArticleTitle;
+        private final ImageView mIvFollow;
+        private final ImageView mIvClock;
+        private final TextView mTvTime;
+        private final TextView mTvNews;
+
+        public ArticleVh(View itemView) {
+            super(itemView);
+            mImg2 = (ImageView) itemView.findViewById(R.id.img2);
+            mTvAuthor = (TextView) itemView.findViewById(R.id.tv_author);
+            mTvArticleType = (TextView) itemView.findViewById(R.id.tv_article_type);
+            mTvArticleTitle = (TextView) itemView.findViewById(R.id.tv_article_title);
+            mIvFollow = (ImageView) itemView.findViewById(R.id.iv_follow);
+            mIvClock = (ImageView) itemView.findViewById(R.id.iv_clock);
+            mTvTime = (TextView) itemView.findViewById(R.id.tv_time);
+            mTvNews = (TextView) itemView.findViewById(R.id.tv_news);
+        }
+    }
+
+    public interface OnItemClickListener{
+        void setOnItemClickListener(View v,int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mOnItemClickListener = listener;
+    }
+}
+
+
+
+
+
+
+
+
+
+

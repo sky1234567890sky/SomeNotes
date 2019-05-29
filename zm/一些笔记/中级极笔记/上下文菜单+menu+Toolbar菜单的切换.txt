@@ -1,0 +1,203 @@
+ =======================ToolBar=========================================》
+ //状态栏
+ public class MainActivity extends AppCompatActivity {
+    private String s;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        //设置标题
+        toolbar.setTitle("主标题");
+        //设置副标题
+        toolbar.setSubtitle("副标题");
+        // 设置图片
+        toolbar.setLogo(R.drawable.ic_launcher_background);
+        // 设置返回图标
+        toolbar.setNavigationIcon(R.mipmap.back);
+        //支持  ToolBar
+        setSupportActionBar(toolbar);
+
+        // 设置监听    setNavigationIcon 的 图片
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("tag","===> ");
+            }
+        });
+
+        // 选项菜单     不需要注册   一般是结合  标题栏  使用
+
+        // 上下文菜单   需要注册     给View 控件
+    }
+
+    //创建选项菜单   一般是结合  标题栏  使用
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // 添加菜单
+        // 方式1
+        //getMenuInflater().inflate(R.menu.menu,menu);
+        // 方式2   组id      菜单id    排序优先级   菜单名称
+        menu.add(0,1,0,"复制");
+        menu.add(0,2,0,"添加");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // 选项菜单的 选中事件
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+
+            case 1:
+                // 写 对应的   操作
+                s = item.getTitle().toString();
+
+                break;
+
+            case 2:
+                s = item.getTitle().toString();
+                break;
+
+/*            case R.id.item3:
+                s = item.getTitle().toString();
+                break;
+            case R.id.item4:
+                s = item.getTitle().toString();
+                break;*/
+        }
+        Log.i("tag","你选中的是："+s);
+        return super.onOptionsItemSelected(item);
+    }
+ 
+  //处理事项 菜单图标问题
+    @Override
+    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
+
+        if (menu != null) {
+
+            if (menu.getClass() == MenuBuilder.class) {
+
+                try {
+
+                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+
+                    m.setAccessible(true);
+
+                    m.invoke(menu, true);
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
+    }
+    --------------------》
+    //布局
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.along.day05_toolbar.MainActivity">
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar"
+        android:background="?attr/colorPrimary"
+        >
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试"
+            android:layout_gravity="center_horizontal"
+            />
+    </android.support.v7.widget.Toolbar>
+
+</android.support.constraint.ConstraintLayout>
+    
+    
+    =========================ContextMenu==================================》
+    public class MainActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
+    private ArrayList<String> list;
+    private int index = 0;
+    private MyAdapter myAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ListView lv = findViewById(R.id.lv);
+        list = new ArrayList<String>();
+
+        for (int i = 0; i < 50; i++) {
+            list.add("测试--> " + i);
+        }
+        // 创建适配器
+        myAdapter = new MyAdapter(list, this);
+        lv.setAdapter(myAdapter);
+        //注册上下文菜单
+        registerForContextMenu(lv);
+        lv.setOnItemLongClickListener(this);
+    }
+    //创建上下文菜单
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(0,1,0,"修改");
+        menu.add(0,2,0,"删除");
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case 1:
+                break;
+            case 2:
+                list.remove(index);
+                myAdapter.notifyDataSetChanged();
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        //记录下标
+        index = position;
+        return false;
+    }
+}
+
+=====================================================》
+
+//ToolBar菜单栏的相互切换
+
+ @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.add(0,1,0,"ListView");
+        menu.add(0,2,0,"GridView");
+        return super.onPrepareOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case  1:
+                s = item.getTitle().toString();
+             mListviewLv.setVisibility(View.VISIBLE);
+             mListviewLv1.setVisibility(View.GONE);
+                break;
+                case  2:
+                    s = item.getTitle().toString();
+                    mListviewLv.setVisibility(View.GONE);
+                    mListviewLv1.setVisibility(View.VISIBLE);
+                break;
+        }
+        Toast.makeText(this, "你点击了"+s, Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
+    }

@@ -1,0 +1,50 @@
+ // 1.获取文件
+    String filePath = Environment.getExternalStorageDirectory() + File.separator + "bb.png";
+    File file = new File(filePath);
+    if (file.exists()) {
+        Log.d(TAG, "exists: " + true);
+    }
+    // 2.创建文件上传请求对象
+    RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), file);
+    // 3.new okHttp
+    OkHttpClient okHttpClient = new OkHttpClient();
+    // 4.创建多媒体 请求对象
+    RequestBody multipartBody = new MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("key", "png")  // 文件上传的参数
+            .addFormDataPart("file", file.getName(), fileBody)
+            .build();
+    
+    //5. 创建request对象
+    final Request request = new Request.Builder()
+            .url("http://yun918.cn/study/public/file_upload.php")
+            .post(multipartBody)
+            .build();
+    // 6 获取Call 请求对象
+    Call call = okHttpClient.newCall(request);
+    
+    call.enqueue(new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.d(TAG, "onFailure: ");
+        }
+    
+        @Override
+        public void onResponse(Call call, final Response response) throws IOException {
+            final String string = response.body().string();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONObject jsonObject = new JSONObject(string);
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        String url = data.getString("url");
+                        Glide.with(MainActivity.this).load(url).into(img);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Log.d(TAG, "onResponse: " + "asdklj;aosldj");
+                }
+            });
+        }
+    });

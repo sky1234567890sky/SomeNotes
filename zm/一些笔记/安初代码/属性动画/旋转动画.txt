@@ -1,0 +1,20 @@
+iv = (ImageView) findViewById(R.id.iv);
+		
+		an = new RotateAnimation(0, 
+				90, 
+				Animation.RELATIVE_TO_SELF, 
+				0.5f, 
+				Animation.RELATIVE_TO_SELF, 
+				0.5f);
+		an.setDuration(3000);
+		an.setFillAfter(true);
+		
+		iv.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				iv.startAnimation(an);
+				
+			}
+		});

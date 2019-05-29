@@ -1,0 +1,21 @@
+//3. tab切换vp跟着变化
+                    tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            vp.setCurrentItem(tab.getPosition());
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
+
+                        }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+
+                        }
+                    });
+
+                    //4  vp切换tab跟着变化
+                    vp.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
+                

@@ -1,0 +1,11 @@
+上传文件的MediaType：
+"image/gif"
+"image/jpeg"
+"image/jpg"
+"image/png"
+"image/x-png"
+"multipart/form-data"
+"video/mp4"
+"application/octet-stream"
+上传的文件类型：
+"gif","jpeg","jpg","png","mp4"

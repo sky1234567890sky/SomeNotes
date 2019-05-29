@@ -1,0 +1,204 @@
+//多布局
+自定义类继承RecyclerView.Adapter<泛型为RecyclerView.ViewHolder>
+========================================================》
+//适配器
+public class MyAdapter extends RecyclerView.Adapter{
+    private Context context;
+    private ArrayList<User> list;
+    public MyAdapter(Context context, ArrayList<User> list) {
+        this.context = context;
+        this.list = list;
+    }
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+         RecyclerView.ViewHolder holder = null;
+        if (viewType == 1) {
+            View v_left = LayoutInflater.from(context).inflate(R.layout.item_1, null, false);
+            //多态
+            holder = new holder_left(v_left);
+        }else if(viewType == 2){
+            View v_right = LayoutInflater.from(context).inflate(R.layout.item_2, null, false);
+            //多态
+            holder = new holder_right(v_right);
+
+        }
+        return holder;
+    }
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int itemViewType = holder.getItemViewType();
+        if (itemViewType == 1){
+            holder_left left = (holder_left) holder;//向下转型
+            left.tv_left.setText(list.get(position).getName()+"说"+list.get(position).getContent());
+        }else if(itemViewType == 2){
+            holder_right right = (holder_right) holder;
+            //设置数据   right.tv_right.setText(list.get(position).getName()+"说"+list.get(position).getContent());
+        }
+    }
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+   //控制条目的类型 标记
+    @Override
+    public int getItemViewType(int position) {
+        if (list.get(position).getFlag() == 1) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+    class holder_left extends RecyclerView.ViewHolder{
+        private final TextView tv_left;
+        public holder_left(View itemView) {
+            super(itemView);
+            tv_left = itemView.findViewById(R.id.tv1);
+        }
+    }
+    class holder_right extends RecyclerView.ViewHolder{
+        private final TextView tv_right;
+        public holder_right(View itemView) {
+            super(itemView);
+            tv_right = itemView.findViewById(R.id.tv2);
+        }
+    }
+}
+
+===============================================================》
+//MainActivity  java代码
+ protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+    }
+    private void initView() {
+        mRl = (RecyclerView) findViewById(R.id.rl);
+        mBtHong = (Button) findViewById(R.id.bt_hong);
+        mBtHong.setOnClickListener(this);
+        mEtHong = (EditText) findViewById(R.id.et_hong);
+        mEtMing = (EditText) findViewById(R.id.et_ming);
+        mBtnMing = (Button) findViewById(R.id.btn_ming);
+        mBtnMing.setOnClickListener(this);
+        //管理器（可以为网格布局管理器和 瀑布流）
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mRl.setLayoutManager(linearLayoutManager);
+        //数据源
+        list = new ArrayList<User>();
+                list.add(new User("小红", "你好", 1));
+                list.add(new User("小明", "你好", 2));
+        //创建适配器
+        myAdapter = new MyAdapter(this, list);
+        mRl.setAdapter(myAdapter);//绑定适配器
+
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.bt_hong:
+            //先获取对画框的内容 当点击发送按钮后对话框中的内容就为空。
+                String hong = mEtHong.getText().toString();
+                String name = mBtHong.getText().toString();
+                mEtHong.setText("");
+                list.add(new User(name,hong,1));
+                myAdapter.notifyDataSetChanged();
+                break;
+            case R.id.btn_ming:
+                String ming = mEtMing.getText().toString();
+                String name_2 = mBtnMing.getText().toString();
+                mEtMing.setText("");
+                list.add(new User(name_2,ming,2));
+                myAdapter.notifyDataSetChanged();
+                break;
+        }
+    }
+}
+
+===============================================》
+//main布局
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.dl_rl_duolayout.MainActivity">
+    //表格布局
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        />
+        //发送按钮与对话框
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <Button android:id="@+id/bt_hong"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:text="小红"
+                />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:id="@+id/et_hong"
+                />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:id="@+id/et_ming"
+                />
+            <Button android:id="@+id/btn_ming"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:text="小明"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
+------------------item_1------》//表格布局里发送的内容布局
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv1"
+
+        android:textSize="30sp"
+        android:gravity="left"
+        />
+</LinearLayout>
+
+--------------------item_2----------------->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv2"
+        android:textSize="30sp"
+        android:gravity="right"
+
+        />
+
+</LinearLayout>

@@ -1,0 +1,571 @@
+1.延迟跳转。
+//在oncreate中创建主线程
+tv_shuzi = (TextView) findViewById(R.id.tv_shizi);
+		new Thread(){
+			public void run() {
+				Timer timer = new Timer();
+				task = new TimerTask() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						handler.sendEmptyMessage(11);
+						//暗号
+					}
+				};
+				//每秒跳动一次
+				timer.schedule(task, 0,1000); 
+			};
+		}.start();
+//在主方法为接受（oncreat）可看做为主线程
+    private TimerTask task;
+	private int conn=5;
+	Handler handler = new Handler(){
+		public void handleMessage(Message msg) {
+			if (msg.what==11) {
+				tv_shuzi.setText(conn--+"");
+			}
+			if (conn<0) {
+				task.cancel();
+				startActivity(new Intent(AMainActivity.this, BMainActivity.class));
+			}
+		}
+	};
+	
+	第二种方法
+	//倒计时
+    new CountDownTimer(6000,1000) {
+			@Override
+			public void onTick(long millisUntilFinished) {
+				// TODO Auto-generated method stub
+				tv.setText("倒计时"+millisUntilFinished/1000+"秒");
+				
+			}
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainActivity.this,TWOActivity.class);
+				startActivity(intent);
+			} 
+		}.start();
+		
+		
+	//第三种方法：
+	public class A extends Activity {
+	String s[] = {"一","二","三","四","五"};
+	int  i = 4;
+	Handler hand = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			if(i>0){
+				i--;
+				content.setText("欢迎来到积云教育:还剩"+s[i]);
+			}else{
+				// 停止  倒计时
+				timer.cancel();// 取消任务
+				// 跳转到需要页面
+				startActivity(new Intent(A.this,B.class));
+			}
+		};
+	};
+	private Timer timer;
+	private TextView content;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_);
+		
+		content = (TextView) findViewById(R.id.count);
+		Button a = (Button) findViewById(R.id.A_);
+		a.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(A.this,B.class));
+			}
+		});
+		//content.setText("欢迎来到积云教育:还剩"+s[i]);
+		TimerTask timerTask = new TimerTask() {
+			//int i = 5;
+			@Override
+			public void run() {
+				//i--;
+				//子线程
+				// tv.setText(i);  修改UI
+				hand.sendEmptyMessage(1); // 标识
+			}
+		};
+		// 启动
+		timer = new  Timer();
+		timer.schedule(timerTask, 1000, 1000);
+	}
+}
+
+
+//延迟跳转第四种方法
+=======================================================倒计时===============================================
+public class A extends Activity {
+	String [] str={"一","二","三","四","五"};
+	private int t = 4;
+	private TextView dowmTimer;
+	Handler hand = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 1:
+				t --;
+				dowmTimer.setText(str[t]+"s");
+				if (t > 0) {
+					Message message = hand.obtainMessage(1);
+					hand.sendMessageDelayed(message, 1000);
+				}else{
+					goHome();
+				}
+			break;
+
+			default:
+				break;
+			}
+		}
+	};
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_);
+		dowmTimer = (TextView) findViewById(R.id.DownTimer);
+		
+		Message message = hand.obtainMessage(1);
+		hand.sendMessageDelayed(message, 1000);
+		
+		
+	}
+	private void goHome() {
+		// TODO Auto-generated method stub
+		startActivity(new Intent(A.this,B.class));
+		finish();
+	};
+}
+//总结：通过 handler.sendMessageDelayed(message, 1000); 
+//方法，我们设置的是1秒钟通知handler改变我们界面的倒计时，
+//我为什么在布局文件中的TextView中填写一个android:text=”5s” 
+//这个是主要当你打开程序的时候出现短暂的界面空白所做的。
+//我自己实践了感觉还不错，希望大家能够喜欢，也希望老鸟们不要嫌弃~
+
+//=========================================记住密码；==============================================
+public class Save_Activity extends Activity implements OnClickListener {
+	private Button login;
+	private Button regist;
+	private CheckBox number;
+	private EditText etname;
+	private EditText etpwd;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_save_);
+		 login = (Button) findViewById(R.id.btn_longin);
+		 regist = (Button) findViewById(R.id.btn_regist);
+		 number = (CheckBox) findViewById(R.id.box_number);
+		 etname = (EditText) findViewById(R.id.login_et);
+		 etpwd = (EditText) findViewById(R.id.regist_et);
+		 //读
+		 SharedPreferences spr = getSharedPreferences("user", MODE_PRIVATE);
+		 boolean boolean1 = spr.getBoolean("checked", false);
+		 if (boolean1) {
+			 String name = spr.getString("name", "");
+			 String pwd = spr.getString("pwd", "");
+			 etname.setText(name);
+			 etpwd.setText(pwd);
+		}
+		 number.setChecked(boolean1);
+		 
+		 login.setOnClickListener(this);
+	}
+	@Override
+	public void onClick(View v) {
+		
+		switch (v.getId()) {
+		case R.id.btn_longin://存
+			SharedPreferences sp = getSharedPreferences("user", MODE_PRIVATE);
+			Editor edit = sp.edit();
+			boolean checked = number.isChecked();
+			//判断是否勾选	如果勾选 存储密码账号
+			if (checked) {
+				String name = etname.getText().toString();
+				String pwd = etpwd.getText().toString();
+				edit.putString("name", name);
+				edit.putString("pwd", pwd);
+			}
+			edit.putBoolean("checked", checked);//存储勾选状态
+			
+			edit.commit();
+			//提交
+			break;
+
+		default:
+			break;
+		}
+		
+	}
+}
+<========================================================================================================>
+//解读json/xml文件；
+new Thread(){
+			public void run() {
+				String url="http://192.168.1.139:8080/a/mingche/haoche_json_object.txt";
+				try {
+					HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+					if (con.getResponseCode() == 200) {
+						InputStream is = con.getInputStream();
+						byte [] by=new byte[1024];
+						int len =0;
+						StringBuffer sbf = new StringBuffer();
+						while((len=is.read(by))!=-1){
+							sbf.append(new String(by,0, len ,"gbk"));
+						}
+						Info info = JSON.parseObject(sbf.toString(),Info.class);
+						ArrayList<Infos> infos = info.getInfos();
+						
+						Log.i("aaa==>", infos.toString());
+						Message me = new Message();
+						me.obj=infos;
+						han.sendMessage(me);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			};
+		}.start();
+		
+		
+		
+		//自定义类加载网络图片 --  龙
+		
+	class ImageLoadTask extends AsyncTask<String, Integer, Drawable>{
+			ImageView img;
+		public ImageLoadTask(ImageView img) {
+			super();
+			this.img = img;
+		}
+		@Override
+		protected Drawable doInBackground(String... params) {
+			URL url;
+			try {
+				url = new URL(params[0]);
+				Drawable drawable = Drawable.createFromStream( url.openStream(), "img");
+				return drawable;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		@Override
+		protected void onPostExecute(Drawable result) {
+			super.onPostExecute(result);
+			img .setImageDrawable(result);
+		}
+	}
+	
+	<============================自定义适配器跟异步加载=================================================>
+	=====讲师宋明玮
+	public class myAdapter extends BaseAdapter{
+	private List<A> mlist;
+	private Context context;
+	
+	
+	private ImageView imageurl;
+	private TextView bookname;
+	private TextView auther;
+	
+	public myAdapter(List<A> mlist, Context context) {
+		super();
+		this.mlist = mlist;
+		this.context = context;
+	}
+
+	@Override
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return mlist.size();
+	}
+
+	@Override
+	public Object getItem(int position) {
+		// TODO Auto-generated method stub
+		return mlist.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		// TODO Auto-generated method stub
+		return position;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder vh = null;
+		if (convertView == null) {
+			convertView=LayoutInflater.from(context).inflate(R.layout.item_mastrwork, null);
+			vh = new ViewHolder();
+			vh.imageurl = (ImageView) convertView.findViewById(R.id.iv_masterwork);
+			vh.bookname = (TextView) convertView.findViewById(R.id.tv_title);
+			vh.auther = (TextView) convertView.findViewById(R.id.tv_content);
+			convertView.setTag(vh);
+		}else{
+			vh=(ViewHolder) convertView.getTag();
+		}
+		A a = mlist.get(position);
+		new ImageLoadTask(vh.imageurl).execute(a.getImageurl());
+		vh.bookname.setText(a.getBookname());
+		vh.auther.setText(a.getAuther());
+		return convertView;
+	}
+}
+ class ViewHolder {
+	 ImageView imageurl;
+	 TextView bookname;
+	 TextView auther;
+//	 this.id = id;
+//		this.imageurl = imageurl;
+//		this.bookname = bookname;
+//		this.auther = auther;
+ }
+ 
+ class ImageLoadTask extends AsyncTask<String, Void, Bitmap>{
+	 private ImageView imageurl;
+	public ImageLoadTask(ImageView imageurl) {
+		super();
+		this.imageurl = imageurl;
+	}
+	@Override
+	protected Bitmap doInBackground(String... params) {
+		try {
+			URL url = new URL(params[0]);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			if (con.getResponseCode() ==200) {
+				
+				InputStream is = con.getInputStream();
+				
+				Bitmap bitmap = BitmapFactory.decodeStream(is);
+				
+				return bitmap;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@Override
+	protected void onPostExecute(Bitmap result) {
+		super.onPostExecute(result);
+		if (result == null) {
+			imageurl.setImageResource(R.drawable.ic_launcher);
+		}else{
+		imageurl.setImageBitmap(result);
+	}
+	}
+}
+============================自定义适配器跟异步加载=================================================>
+
+
+
+
+
+
+
+
+
+==============================解析xml文件================================================>
+	
+	
+	
+	<?xml version="1.0" encoding="utf-8"?>
+<books>
+    <book id="1">
+        <imageurl>http://192.168.1.39:8080/a/huofa.jpg</imageurl>
+        <bookname>活法</bookname>
+        <auther>稻盛和夫</auther>
+    </book>
+    <book id="2">
+        <imageurl>http://192.168.1.39:8080/a/hongloumeng.jpg</imageurl>
+        <bookname>红楼梦</bookname>
+        <auther>曹雪芹</auther>
+    </book>
+    <book id="3">
+        <imageurl>http://192.168.1.39:8080/a/sanguo.jpg</imageurl>
+        <bookname>三国演义</bookname>
+        <auther>罗贯中</auther>
+    </book>
+    <book id="4">
+        <imageurl>http://192.168.1.39:8080/a/xiyouji.jpg</imageurl>
+        <bookname>西游记</bookname>
+        <auther>吴承恩</auther>
+    </book>
+</books>
+
+
+=========》实体类；
+//标签为 最大的 
+	@XStreamAlias("books")
+public class Book {
+	@XStreamAsAttribute
+	private int id;
+	private String imageurl;
+	
+	private String bookname;
+	
+	private String auther;
+	
+	public Book() {
+		// TODO Auto-generated constructor stub
+	}
+	
+
+	public Book(int id, String imageurl, String bookname, String auther) {
+		super();
+		this.id = id;
+		this.imageurl = imageurl;
+		this.bookname = bookname;
+		this.auther = auther;
+	}
+	
+
+        =====》java逻辑代码；
+public static void main(String[] args) {
+		String spec="http://127.0.0.1:8080/a/sidamingzhu.xml/books.xml";
+			URL url;
+			try {
+				url = new URL(spec);
+				HttpURLConnection con = (HttpURLConnection) url.openConnection();
+				int in = con.getResponseCode();
+				if (in==200) {
+					InputStream stream = con.getInputStream();
+					int len;
+					StringBuffer sb = new StringBuffer();
+					byte[] by=new byte[1024];
+					while((len=stream.read(by))!=-1){
+						sb.append(new String(by,0,len));
+					} 
+					XStream xs = new XStream(new DomDriver());
+					
+					xs.alias("books",List.class);
+					
+					xs.alias("book",Book.class);
+					
+					xs.aliasAttribute(Book.class,"id", "id");
+					List<Book> xml = (List<Book>) xs.fromXML(sb.toString());
+					for (Book book : xml) {
+						System.out.println(book);
+					}
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+		}
+	}
+	
+	
+	//=========================>滑动页面 ====================================================================
+	
+	//自定义类继承抽象类ImagePagerAdapter并重写四个方法。
+	(1).有参构造==>private Context 跟Pprivate List<Integer>泛型里面放的是整形：图片；
+	1.getCount()
+	2.isViewFromObject(View arg0,object arg1)
+	3.instantiateItem(ViewGroup container,int position)
+	4.destroyItem(ViewGroup container, int position, Object object)
+	
+	public class ImagePagerAdapter extends PagerAdapter{
+	private Context mContext;
+	private List<Integer> mList;
+	
+	public ImagePagerAdapter(Context mContext, List<Integer> mList) {
+		super();
+		this.mContext = mContext;
+		this.mList = mList;
+	}
+
+	@Override
+	public int getCount() {
+		return mList.size();
+	}
+	@Override
+	public boolean isViewFromObject(View arg0, Object arg1) {
+		return arg0 == arg1;
+	}
+	
+	
+	@Override
+	public Object instantiateItem(ViewGroup container, int position) {
+		//自定义 布局//布局里面有图片跟按钮
+		View view = View.inflate(mContext, R.layout.activity_pager_btn__main, null);
+		//找到 视图id 
+		ImageView imageview = (ImageView) view.findViewById(R.id.Pager_vp);
+		
+		if (position == mList.size() - 1) {//滑动的  最后的 页面
+			//找到 最后页面上的按钮 
+			Button btn = (Button) view.findViewById(R.id.btn_start);
+			
+			btn.setVisibility(view.VISIBLE);//让按钮隐藏
+			//给按钮设置 点击监听
+			btn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					//点击按钮 指定要跳转的页面
+					mContext.startActivity(new Intent(mContext,B_login.class));
+					//关闭页面
+					((Activity)mContext).finish();
+				}
+			});
+		}
+		//将视图写进 ImageView的id里面
+		imageview.setImageResource(mList.get(position));
+		///将视图添加到 ViewGgroup里面
+		container.addView(view);
+		//返回 视图
+		return view;
+		
+	}
+	//重写销毁条目方法 
+	@Override
+	public void destroyItem(ViewGroup container, int position, Object object) {
+		//将 container 删除  
+		//object强转为 View 对象
+		container.removeView((View)object);
+	}
+}
+        //布局里面为：==>
+        <ImageView
+        android:id="@+id/Pager_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="进入主页"
+        android:visibility="gone" 
+        />
+
+//要跳转的页面为==>
+@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_a__timer);
+		
+		ViewPager one_img = (ViewPager) findViewById(R.id.one_img);
+		one_time = (TextView) findViewById(R.id.one_time);
+		//往适配器面添加图片
+		List<Integer> mList =new ArrayList<Integer>();
+		mList.add(R.drawable.hkdg1);
+		mList.add(R.drawable.ic_launcher);
+		mList.add(R.drawable.hkdg1);
+		//创建适配器并绑定适配器
+		ImagePagerAdapter adapter = new ImagePagerAdapter(this, mList);
+		one_img.setAdapter(adapter);
+		
+		//布局为===>
+		//标签为 在 java代码中 敲一个 PagerAdapter后快捷键 导个包 把它粘到 布局的 标签上 ==>android.support.v4.view.ViewPager
+		<android.support.v4.view.ViewPager
+	    android:id="@+id/one_img"
+	    android:layout_height="200dp"
+	    android:layout_width="match_parent"
+	    android:src="@drawable/hkdg1"
+	    android:layout_marginTop="10dp"
+	    />
+    <==================================================滑动页面===========================================================>
+
