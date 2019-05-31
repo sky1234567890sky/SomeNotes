@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/option1" android:title="@string/addpeople" android:icon="@mipmap/ic_author"/>
+<item android:id="@+id/option2" android:title="@string/phronecontact" android:icon="@drawable/icon_me_not_selected"/>
+<item android:id="@+id/option3" android:title="@string/EmergencyContactPerson" android:icon="@drawable/icon_me_selected"/>
+</menu>

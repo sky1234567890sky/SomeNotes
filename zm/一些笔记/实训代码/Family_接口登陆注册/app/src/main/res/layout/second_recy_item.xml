@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_margin="15dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<ImageView
+    android:id="@+id/recy_item_image"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:src="@drawable/head"/>
+    <TextView
+        android:id="@+id/recy_item_content"
+        android:textColor="@color/c_F23333"
+        android:layout_toRightOf="@id/recy_item_image"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/balloon_l"/>
+    <TextView
+        android:id="@+id/recy_item_content12"
+        android:textColor="@color/c_F23333"
+        android:layout_toRightOf="@id/recy_item_image"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/chatfrom_voice_playing_f3"
+        android:visibility="gone"
+        />
+</RelativeLayout>

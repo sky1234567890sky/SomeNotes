@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/ring_spack_dl"
+    android:alpha="0.8"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_D9D3D3">
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:padding="10dp"
+            android:id="@+id/ring_spack_smart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8">
+           <android.support.v7.widget.RecyclerView
+               android:id="@+id/ring_spack_recy"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"/>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </LinearLayout>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ring_spack_item2"
+        android:checkable="true"
+        android:icon="@drawable/chinaz8"
+        android:checked="true"
+        android:title="@string/short_video" />
+    <item
+        android:id="@+id/ring_spack_item1"
+        android:checkable="true"
+        android:icon="@mipmap/ic_author"
+        android:title="@string/ring_spack" />
+    <item
+        android:id="@+id/ring_spack_item3"
+        android:icon="@drawable/home_unselected"
+        android:checkable="true"
+        android:title="@string/backgroud" />
+    <item
+        android:id="@+id/ring_spack_item4"
+        android:checkable="true"
+        android:icon="@mipmap/ic_night"
+        android:title="@string/night" />
+    <item
+        android:id="@+id/ring_spack_item5"
+        android:checkable="true"
+        android:icon="@drawable/icon_settings"
+        android:title="@string/setting" />
+    <item
+        android:id="@+id/ring_spack_item6"
+        android:checkable="true"
+        android:icon="@drawable/ku1"
+        android:title="@string/out" />
+</menu>

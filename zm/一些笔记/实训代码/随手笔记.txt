@@ -185,5 +185,3 @@ Activity中两个fragment之间的传值:在Activity中给传值对象用bundle传；
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:lineSpacingExtra="3dp"
-
-

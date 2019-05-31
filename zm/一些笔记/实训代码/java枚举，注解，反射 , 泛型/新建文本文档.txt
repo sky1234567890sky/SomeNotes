@@ -1,0 +1,151 @@
+1.反射：获取类的字节码文件，所有东西包括-类，属性（私有共有）构造，对象，方法，字段，变量；拿到了可以自己new；
+把.java文件---->.class文件；
+Person()类，有参无参构造，有参无返，午餐有反，
+
+步骤：（1）获取类的字节码问文件
+1.Class aClazz =  Class.forName("包名");//全类名
+2.Class aClazz  = 类名.class；
+3. 类名  aClazz = new 类名（）；
+Class aClass = aClazz.getClass();
+
+（2）获取构造方法---对象
+
+Constructor constructor = aClazz.getConstructor(Class<?>...可以传多个参数，无参构造不填，有参构造就填类型.class,多个参数用逗号隔开);//获取构造（加s）获取是所有构造
+//为了new对象
+Person person1  = constructor .newInstance();//强转为对象
+
+aClazz.getMethod()；//获取注解
+aClazz.getFeil();//获取变量
+aClazz.get
+aClazz.getName()；//获取当前
+（3）方法
+aClazz.getMethod(name,可变参);///获取当前类以及父类的公开（非私有）方法
+Method  showMsg= aClazz.getDeclaredMothed(括号里赋值，参数类型.class)；//获取本类中的共有以及私有方法
+showMs.setAccessible(true);//给私有方法的访问权限
+showMsg.invoke(person1,实参的数据.....);//方法有返回值就接，没有就不反；
+
+access权限
+aClazz.getDeclaredMethod("方法名")；
+
+（4）操作变量
+File name = aClazz.getDeclaredFile("变量")//获取变量;
+//变量赋值，若是私有给访问权限
+name.setAccessible(true);
+name.set(persion1,"");//给变量赋值
+
+=========》案例
+ //获取类的字节码文件
+//            Class aClass = Class.forName("com.example.javademo.reflrct.Person");//方法一
+//            Class<Person> aClass = Person.class;//方法二
+            Class aClass = new Person().getClass();//方法三
+            //获取构造方法-----》为了获取对象
+            Constructor constructor = aClass.getConstructor();//获取当前类的构造方法
+            Person newInstance = (Person) aClass.newInstance();//获取对象
+            System.out.println("获取对象："+newInstance);
+	//有参有反
+            Method one = aClass.getDeclaredMethod("one", String.class, int.class, long.class);
+            one.setAccessible(true);
+            int wu = (int) one.invoke(newInstance, "吴彦祖", 40, 180);
+            System.out.println(wu);
+            
+ 
+2.泛型：限定数据类型。泛型泛指某个类型，可以把某个方法限定为泛型方法，
+一个泛型的情况下用<T> 多个可以任意命名，多个泛型可以用逗号隔开。
+泛型可以做返回值，泛型只能是引用类型，不能是基本数据类型；
+
+eg:
+public static <T> void printArrInt(T [] arr){
+	for(T t : arr){
+	system.out.print(t);
+	}
+}
+public class Demo1<T>{
+set和get方法
+}
+pubic static void main(String [] args){
+	Demo1<String> demo =new Demo1();
+	demo.setT("name");
+	system.out.print(demo);	
+	......		
+	
+	new Demo1(){
+	@Override
+	getT(){
+		
+	}
+	}
+
+}
+有界参数类型:只能是某个类的子类；<T extends Number>
+类型通配符,向下限定；向上限定；
+
+//泛型案例
+public class Demo1 {
+    public static  <T> void arraylist(T [] arr) {
+        for (T t :arr) {
+            System.out.println(t);
+        }
+    }
+    public static void main(String[] args) {
+        Integer[] arr1 = {1,2,3,};
+        arraylist(arr1);
+
+        Double[]arr2 = {1.2,1.2,1.3};
+        arraylist(arr2);
+
+        String [] arr3 = {"12324","q45453q5"};
+        arraylist(arr3);
+    }
+
+}
+
+
+
+3.枚举：一个一个的举例，选择;
+//枚举案例
+public enum Color(){
+//变量
+Red,Green,Blue;
+}
+//定义一个测试类Text
+public class Text {
+    public static void main(String[] args) {
+            text(Color.GREEN);
+    }
+    public static void text(Color color){
+        switch (color) {
+            case BLUE:
+                System.out.print("BLUE");
+                break;
+            case GREEN:
+                System.out.print("GREEN");
+                break;
+
+            case RED:
+                System.out.print("RED");
+                break;
+        }
+    }
+}
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
