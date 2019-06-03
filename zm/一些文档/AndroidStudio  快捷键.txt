@@ -1,0 +1,39 @@
+AndroidStudio  快捷键
+
+// 修改快捷键的页面 	settings - Keymap - 找到要修改的快捷键 - 右击 - 选择Add keyboard Shortcut(添加快捷键) - 如果被占用(会提示) - 最后还要删除原先的快捷键
+// 修改主题的页面		settings - Appearance & Behavior - Appearance - Theme中的选项 - (Darcula黑,Intellij白) - Apply - ok
+
+//android studio 代码提示不区分大小写  //File | Settings | Editor | General | Code Completion  改成none
+
+Ctrl + alt + F     			成员变量
+Ctrl + L		  			格式化	
+Ctrl + alt + 空格		    代码提示
+Ctrl + Shift + 空格			方法提示
+Ctrl + Shift + space		自动补全代码
+Ctrl + alt + L				格式化代码
+Ctrl + D					复制行
+Ctrl + Shift + F12			显示/隐藏所以窗口
+Ctrl + alt + E				FindViewById (找控件对象)
+Ctrl + G					跳转到指定位置 (定位到指定列或行)
+Ctrl + Shift + I			快速查看函数定义 (方法中的代码)
+Ctrl + p 					参数信息 (显示方法的参数信息)
+Ctrl + F12					类元素快速定位 (浮动窗显示类结构，通过输入关键词完成快速定位)
+Ctrl + Shift				回退到上一次修改后的地方
+Ctrl + R					修改一样的字符串
+Ctrl + alt + M				抽方法
+Ctrl + F					锁定要查找的方法
+Ctrl + J					一些方法的快捷键
+Ctrl + O					显示可以使用的所有方法
+Ctrl + E                    最近使用的文件
+Ctrl + Shift + Backspace	会退到上一次编辑的地方
+Shift + F6					重命名
+alt + F7					Androidstudio中显示所有使用这个方法的快捷键
+alt + Enter		   			代码补全
+alt + Insert	   			生成代码 (如get，set方法，构造函数等)
+alt + 鼠标左键 + 拖动		列选择
+F2							代码错误定位
+网络解析时  创建一个类，使用 alt + s 把数据放进去		GsonFormat 插件
+
+先使用Ctrl + J 快捷键，然后输出toast     		吐司的快捷键
+
+fori						for循环快捷键

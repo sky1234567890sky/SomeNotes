@@ -1,0 +1,141 @@
+1.Tangram的概念：Tangram 是阿里出品的用于快速实现组合布局的框架模型，在手机天猫 Android 及 iOS版广泛使用；
+中文翻译为七巧板，即该框架提供一系列基本单元布局，通过快速拼装就能搭建出一个具备多种布局的页面。
+Tangram提供了流式布局、滚动布局，瀑布流布局，固定布局等数种布局样式，布局提供样式参数供调整，
+布局内部也可填充任意的视图(View)，使Native开发的页面具备一定的动态性，并提供极致的性能。
+Tangram包含的特点如下：
+Android iOS 双平台支持，iOS 版本参考开源库?Tangram-iOS。
+通过 json 创建页面视图，并提供了默认的解析器。
+可轻松实现页面视图的回收与复用。
+框架提供多种默认的布局方式。
+通过 json 数据或代码支持自定义布局样式。
+高性能，基于vlayout。
+支持扩展功能模块。
+--------------------- 
+2 Tangram使用步骤
+2.1 引入依赖；在APP的build.gradle中添加：
+
+implementation 'com.alibaba.android:tangram:3.3.6@aar'
+// we added rxjava in latest version, so need compile rxjava
+implementation 'io.reactivex.rxjava2:rxjava:2.1.12'
+
+其中，Tangram的版本号可以改成最新的，最新版本号可以在这个链接找到：
+https://github.com/alibaba/Tangram-Android/releases
+
+另外还要添加VirtualView和UltraViewPager这两个库，否则运行时会出现问题：
+implementation ('com.alibaba.android:virtualview:1.4.6@aar') {
+    transitive = true
+}
+implementation ('com.alibaba.android:ultraviewpager:1.0.7.7@aar') {
+    transitive = true
+}
+
+VirtualView的最新版本号可以在这里找到：https://github.com/alibaba/Virtualview-Android/releas
+
+
+2.2 初始化 Tangram 环境
+应用全局只需要初始化一次，需要提供一个图片加载器，例如使用Glide库或Picasso库，代码如下：
+
+TangramBuilder.init(context, new IInnerImageSetter() {
+	@Override
+	public <IMAGE extends ImageView> void doLoadImageUrl(@NonNull IMAGE view,
+                    @Nullable String url) {
+		//假设你使用 Picasso 加载图片
+		Picasso.with(context).load(url).into(view);
+	}
+}, ImageView.class);
+
+
+2.3 初始化 TangramBuilder
+在 Activity 中初始化TangramBuilder，假如你的 Activity 是TangramActivity，则代码如下：
+
+TangramBuilder.InnerBuilder builder = TangramBuilder.newInnerBuilder(TangramActivity.this);
+2.4 注册自定义的卡片和组件
+注册组件的方式有如下3种：
+
+（1）注册绑定组件类型和自定义View，示例代码：
+
+builder.registerCell("type", TestView.class);
+（2）注册绑定组件类型、自定义 model、自定义View，示例代码：
+
+builder.registerCell("type", TestCell.class, TestView.class);
+（3）注册绑定组件类型、自定义model、自定义ViewHolder，示例代码：
+
+builder.registerCell("type", TestCell.class, new ViewHolderCreator<>(R.layout.item_holder, TestViewHolder.class, TestView.class));
+这里先不做详解，关于卡片和组件的详细使用请参见第3节。
+
+2.5 生成 TangramEngine 实例
+在上述基础上调用：
+
+TangramEngine engine = builder.build();
+2.6 绑定业务 support 类到 engine
+Tangram 内部提供了一些常用的 support 类辅助业务开发，具体请见3.3节，使用方式有如下3种：
+
+engine.register(SimpleClickSupport.class, new XXClickSupport());
+engine.register(CardLoadSupport.class, new XXCardLoadSupport());
+engine.register(ExposureSupport.class, new XXExposureSuport());
+2.7 绑定 RecyclerView
+engine.bindView(recyclerView);
+2.8 监听 RecyclerView 的滚动事件
+recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+	@Override
+	public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+		super.onScrolled(recyclerView, dx, dy);
+		//在 scroll 事件中触发 engine 的 onScroll，内部会触发需要异步加载的卡片去提前加载数据
+		engine.onScrolled();
+	}
+});
+2.9 设置悬浮类型布局的偏移（可选）
+如果你的 RecyclerView 上方还覆盖有其他 view，比如底部的 tabbar 或者顶部的 actionbar，为了防止悬浮类 view 和这些外部 view 重叠，可以设置一个偏移量。此功能需要额外引入vlayout（https://github.com/alibaba/vlayout）。代码如下：
+
+engine.getLayoutManager().setFixOffset(0, 40, 0, 0);
+2.10 设置卡片预加载的偏移量（可选）
+在页面滚动过程中会触发engine.onScrolled()方法，会去寻找屏幕外需要异步加载数据的卡片，默认往下寻找5个，让数据预加载出来，我们也可以修改这个偏移量，代码如下：
+
+engine.setPreLoadNumber(3);
+2.11 加载数据并传递给 engine
+数据一般是调用接口加载远程数据，这里演示的是 mock 加载本地的数据：
+
+byte[] bytes = Utils.getAssertsFile(this, "data.json");
+if (bytes != null) {
+    String json = new String(bytes);
+    try {
+        JSONArray data = new JSONArray(json);
+        engine.setData(data);
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
+}
+2.12 退出的时候销毁 engine
+engine.destroy();
+通过主动调用 destroy 方法，可以释放内部的资源，比如清理 adapter、清理事件总线缓存的未处理消息、注销广播等。注意调用 destroy 方法之后就不需要调用 unbind 方法了。
+--------------------- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
