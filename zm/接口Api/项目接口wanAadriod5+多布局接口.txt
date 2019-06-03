@@ -29,6 +29,9 @@ http://cdn.banmi.com/banmiapp/apk/banmi_330.apk
 String downLoad = "http://cdn.banmi.com/banmiapp/";
     @GET("apk/banmi_330.apk")
     Observable<ResponseBody>download();
+
+//
+//http://api.tianapi.com/wxnew?key=52b7ec3471ac3bec6846577e79f20e4c&num=20&page=10
 ============================================================================》
 //上传文件
 http://yun918.cn/study/public/file_upload.php
