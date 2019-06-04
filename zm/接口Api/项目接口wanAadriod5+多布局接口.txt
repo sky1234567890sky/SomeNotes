@@ -1,4 +1,4 @@
-//都有
+//接口都有
 http://106.13.63.54:8080/sys/gc.json
 
 //环信官网
@@ -18,6 +18,8 @@ https://github.com/AbrahamCaiJin/CommonUtilLibrary
 https://mvnrepository.com/
 
 
+//史上最全的代码方法：
+https://github.com/AbrahamCaiJin/CommonUtilLibrary
 //代码下载
 //https://github.com/codeestX/GeekNews
 //拉代码
