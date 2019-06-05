@@ -77,3 +77,10 @@ https://www.v2ex.com/api/replies/show.json?topic_id=516865
 获取列表数据展示
 /api/topics/show.json?node_name=
 参数在XML文件中
+
+
+///第七天接口
+https:/apl.yunxuekeji.cn/yunxue_app_api/course/igetCourseByTypeAndMore?orderOn=1&classt
+ype=2031001004&forPeopleType=1&format=2&price=2&pageIndex=1&pageSize=10&classTage=3
+
+https://api.yunxuekeji.cn/yunxue_app_api/course/getCourseChapterByld/ID/ID
