@@ -178,3 +178,29 @@ login(SHARE_MEDIA.SINA);
             }
         });
     }
+
+
+
+
+//创建密钥
+Password：123123  Certificate：123123
+Alias：myFile
+Password：123123  Certificate：123123
+苏克阳
+skyUnit
+skytion
+skycity
+skystate
+skycode
+
+
+利用Android Studio进行签名
+1. 在菜单栏中，Build > Generate Signed APK
+2. 选择您想从下拉释放下来，然后单击模块 下一步。
+3. 如果你已经有一个密钥库，请转到步骤5.如果你想创建一个新的密钥库，单击 新建
+Key store path:：选择您的密钥存储应该创建的位置。
+Password：创建并确认您的密钥库安全的密码。
+Alias：你的Enter键的标识名称。
+Validity (years)：设置的时间长度在几年，你的key将是有效的。你的key应该是有效期至少为25年来，这样你就可以通过你的应用程序的寿命相同的密钥签名的应用程序更新。
+Certificate：输入有关自己的一些信息，为您的证书。这个信息是不是在你的应用程序中显示，但是属于apk的一部分。
+填完上面信息，然后单击确定。

@@ -4,6 +4,16 @@ http://106.13.63.54:8080/sys/gc.json
 //环信官网
 https://www.easemob.com/
 
+http://lbsyun.baidu.com/index.php?title=androidsdk/guide/create-project/ak
+//百度开放平台
+http://lbsyun.baidu.com/
+https://open.weibo.com/
+https://open.tencent.com/
+https://open.weixin.qq.com/
+https://developer.umeng.com/
+
+
+
 //极光推送
 https://docs.jiguang.cn/jpush/client/Android/android_sdk/
 
