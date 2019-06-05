@@ -1,5 +1,7 @@
 libs和一些资源
 
+debug.keystore系统签名
+
 
 			清单文件
 

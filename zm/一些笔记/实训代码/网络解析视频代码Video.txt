@@ -1,0 +1,54 @@
+//在适配器的onBindViewHolder（)方法中；
+
+//1.
+  //网络视频解析的
+        String video = resultBean.getVideo();
+        //网络视频
+        Uri parse = Uri.parse(video);
+        //设置视频控制器
+        holder.myvideo.setMediaController(new MediaController(context));
+        //播放完成回调
+        holder.myvideo.setOnCompletionListener( new MyPlayerOnCompletionListener());
+        //设置视频路径
+//        holder.myvideo.setVideoPath(String.valueOf(parse));
+        holder.myvideo.setVideoURI(parse);
+
+        //当点击条目时开始播放视频
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "开始播放了", Toast.LENGTH_SHORT).show();
+                //开始播放视频
+                holder.myvideo.start();
+            }
+        });
+
+//回调
+
+private class MyPlayerOnCompletionListener implements MediaPlayer.OnCompletionListener {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            Toast.makeText( context, "播放完成了", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+//xml布局：
+<android.support.v7.widget.CardView app:cardCornerRadius="5dp"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp">
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:id="@+id/myvideo"
+        />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

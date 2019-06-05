@@ -1,0 +1,180 @@
+//debug.keystore这是默认的本机签名文件；
+如果运行报错：错误:任务':app:validateSigningDebug'执行失败。没有找到用于签名配置“调试”的密钥存储库。
+这个错误的话，解决方法：
+导入下载的工程出现这个错误，追究其原因是是下载的工程中有指定使用的Keystore文件的路径，
+所以我们可以通过Android studio File-》ProjectStructure-》选择app ，再选择signing
+把Store File里指定的Keystore文件的路径删除，或者填写自己的Keystore文件的路径
+然后点击ok，再clean下工程即可；
+debug.keystore路径====>C:\Users\华为\.android\debug.keystore
+
+1.将jar导入和一些资源文件导入；
+在项目的android目录下与defaultConfig平级添加：
+buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+ signingConfigs {
+        debug {
+            storeFile file('C:/Users/华为/.android/debug.keystore')//是我本人的；换成debug.keystore
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+2.添加权限和三方；
+ <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+<!--友盟-->
+        <activity
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false"
+            >
+        </activity>
+        <activity android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            >
+        </activity>
+        <activity
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:launchMode="singleTask"
+            android:name="com.sina.weibo.sdk.share.WbShareTransActivity">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent100424468" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <!--友盟-->
+
+//微信创建包跟类里面不用写东西
+3.创建BaseApp类继承Application并重写onCreate()方法里面写；需要注册
+//第二个参数为qq开放平台里的密钥；
+  UMConfigure.init(this,"5cf7647a570df3fbfe00021a","umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
+        //需要设置各个平台的appkey：
+        PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
+        PlatformConfig.setSinaWeibo("2248884681", "7ed722f6244fb5ce4504b4fe46c394bb","http://sns.whalecloud.com");
+        PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+4.在主方法里写
+（2）分享：
+ private void nobtn(SHARE_MEDIA type) {
+//        无面板的分享：share(SHARE_MEDIA type);
+        UMImage umImage = new UMImage(this, "https://ws1.sinaimg.cn/large/0065oQSqgy1fxno2dvxusj30sf10nqcm.jpg");
+        //压缩 默认为压缩大小
+        umImage.compressStyle = UMImage.CompressStyle.SCALE;
+        new ShareAction(MainActivity.this)
+                .withText("照片")
+                .withMedia(umImage)//分享的内容
+//                .setDisplayList(SHARE_MEDIA.SINA,SHARE_MEDIA.QQ,SHARE_MEDIA.WEIXIN)
+                .setPlatform(type)
+                .setCallback(umShareListener)
+                .share();
+    }
+    //5cf7647a570df3fbfe00021a
+    private void okbtn() {
+//        带面板的分享 shareBorad();
+        UMImage umImage = new UMImage(this, "https://ws1.sinaimg.cn/large/0065oQSqly1fw8wzdua6rj30sg0yc7gp.jpg");
+        //压缩 默认为压缩大小
+        umImage.compressStyle = UMImage.CompressStyle.SCALE;
+
+        new ShareAction(MainActivity.this)
+                .withMedia(umImage)//分享的内容
+                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)//拉起来的平台
+                .setCallback(umShareListener)
+                .open();
+    }
+//回调
+private UMShareListener umShareListener = new UMShareListener() {
+        //分享开始的回调
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+        //分享成功的回调
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(MainActivity.this, "成功了", Toast.LENGTH_LONG).show();
+        }
+        //分享失败的回调
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(MainActivity.this, "失败" + t.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        //分享取消的回调
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(MainActivity.this, "取消了", Toast.LENGTH_LONG).show();
+
+        }
+    };
+
+
+
+（1）登陆三方：
+login(SHARE_MEDIA.WEIXIN);
+login(SHARE_MEDIA.QQ);
+login(SHARE_MEDIA.SINA);
+ //三方登录
+    private void login(SHARE_MEDIA share) {
+        UMShareAPI shareAPI = UMShareAPI.get(this);
+        shareAPI.getPlatformInfo(this, share, new UMAuthListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+            }
+            @Override
+            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                for (Map.Entry<String,String> m : map.entrySet()) {
+                    Log.i("tag", "onComplete: "+m.getKey()+";"+m.getValue());
+                }
+                Toast.makeText(MainActivity.this, "成功了", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                Toast.makeText(MainActivity.this, "失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media, int i) {
+                Toast.makeText(MainActivity.this, "取消", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
