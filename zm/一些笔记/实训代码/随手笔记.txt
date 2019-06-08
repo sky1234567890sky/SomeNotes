@@ -50,8 +50,12 @@ d2j-dex2jar.bat classes.dex
         </com.scwang.smartrefresh.layout.footer.ClassicsFooter>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
+//设置 Header 为 贝塞尔雷达 样式
+refreshLayout.setRefreshHeader(new BezierRadarHeader(this).setEnableHorizontalDrag(true));
+//设置 Footer 为 球脉冲 样式
+refreshLayout.setRefreshFooter(new BallPulseFooter(this).setSpinnerStyle(SpinnerStyle.Scale));
+======================================================》
 Activity中两个fragment之间的传值:在Activity中给传值对象用bundle传；
-
 ///进入app
  getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
 //        getSupportActionBar().hide();//隐藏标题栏
@@ -110,7 +114,7 @@ Activity中两个fragment之间的传值:在Activity中给传值对象用bundle传；
     }
 
 
-=================================》
+======================================================》
 回退棧只在Acticity之閒返回上一級，而在Fragment之間不會返回上一個fragment而只跳轉不顯示Fragment了
 
 回退棧案例
@@ -179,13 +183,21 @@ Activity中两个fragment之间的传值:在Activity中给传值对象用bundle传；
         }
 
     }
-================================================》
+=======================================================》
 //三个点（TextView文本后面的三个点）
 	android:singleLine="true"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:lineSpacingExtra="3dp"
 
-================》
+========================================================》
 //侧滑点击颜色
 toggle.getDrawerArrowDrawable().setColor(getRwsources().getColor(R.color.white));
+
+
+
+
+
+
+
+
