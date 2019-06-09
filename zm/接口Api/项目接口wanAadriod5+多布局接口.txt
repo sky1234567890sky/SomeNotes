@@ -84,6 +84,7 @@ https://cdn.banmi.com/banmiapp/apk/banmi_330.apk
 //选择的价格数字
 https://www.qubaobei.com/ios/cf/dish_list.php?page=1&stage_id=1&limit=20
 
+
 1.1 首页文章列表
 http://www.wanandroid.com/article/list/0/json
 方法：GET
@@ -91,21 +92,19 @@ http://www.wanandroid.com/article/list/0/json
 1.2 首页banner
 https://www.wanandroid.com/banner/json
 方法：GET
-参数：无
+
 2.1 体系数据
 https://www.wanandroid.com/tree/json
 方法：GET
+
 参数：无
-2.2 知识体系下的文章    
+2.2 知识体系 
 https://www.wanandroid.com/article/list/0/json?cid=60
 方法：GET
-参数：
-	cid 分类的id，上述二级目录的id
-	页码：拼接在链接上，从0开始。
 	3.1 导航数据
 https://www.wanandroid.com/navi/json
 方法：GET
-参数：无
+
 4.1 项目分类4.2 项目列表数据
 https://www.wanandroid.com/project/tree/json
 某一个分类下项目列表数据，分页展示
