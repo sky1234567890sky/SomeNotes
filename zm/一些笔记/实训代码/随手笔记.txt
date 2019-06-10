@@ -55,6 +55,7 @@ refreshLayout.setRefreshHeader(new BezierRadarHeader(this).setEnableHorizontalDr
 //设置 Footer 为 球脉冲 样式
 refreshLayout.setRefreshFooter(new BallPulseFooter(this).setSpinnerStyle(SpinnerStyle.Scale));
 ======================================================》
+
 Activity中两个fragment之间的传值:在Activity中给传值对象用bundle传；
 ///进入app
  getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
@@ -140,7 +141,7 @@ Activity中两个fragment之间的传值:在Activity中给传值对象用bundle传；
         Bundle bundle = new Bundle();
         bundle.putString("key","1111");
         guanyuFragment.setArguments(bundle);
-
+        
 //        fragmentTransaction.addToBackStack(null);//回退栈方法一
         fragmentTransaction.commit();
 
@@ -194,7 +195,24 @@ Activity中两个fragment之间的传值:在Activity中给传值对象用bundle传；
 //侧滑点击颜色
 toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
 
-
+==========================================================》
+给TextView设置一些属性即可实现跑马灯的效果
+<!--android:ellipsize="":定义跑马灯的效果，
+    android:focusable=""：聚焦功能
+    android:focusableInTouchMode="":在触屏手机，获取焦点
+    android:marqueeRepeatLimit="marquee_forever":字体永远滚动
+    android:singleLine="true":单行显示-->
+<TextView
+    android:id="@+id/show_tv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:marqueeRepeatLimit="marquee_forever"
+    android:singleLine="true"
+    android:textSize="20dp"/>
+完整Demo代码下载：http://pan.baidu.com/s/1boTwtx9
 
 
 
