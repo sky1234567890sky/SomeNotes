@@ -1,0 +1,59 @@
+=========》静态广播
+Intent intent = new Intent("sky.intent.action.abc");
+intent.putExtra("cid","发送");
+sendBroadcast(intent);
+//这是静态需要清单注册
+<receiver
+            android:name=".MyReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="sky.intent.action.abc"></action>
+            </intent-filter>
+        </receiver>
+//自定义广播接受者类
+public class MyReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+    //吐司
+        String cid = intent.getStringExtra("cid");
+        Toast.makeText(context, ""+cid, Toast.LENGTH_SHORT).show();
+//静态跳转页面时需要添加setFlags栈不然报错
+        Intent intent1 = new Intent(context, Main3Activity.class);
+        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent1);
+    }
+}
+=================》动态广播
+//动态不需要在清单中注册，直接添加过滤器；
+Intent intent = new Intent("abc");
+intent.putExtra("cid","动态");//k,v形式传值
+sendBroadcast(intent);
+        
+//在onResume()方法中  注册广播
+@Override
+    protected void onResume() {
+        super.onResume();
+        myReceiver2 = new MyReceiver2();
+        IntentFilter intentFilter = new IntentFilter();//过滤器对象
+        intentFilter.addAction("abc");//添加过滤器
+        registerReceiver(myReceiver2,intentFilter);//注册广播接受者
+    }
+      @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myReceiver2);//解除注册
+    }
+
+public class MyReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String cid = intent.getStringExtra("cid");
+        Toast.makeText(context, ""+cid, Toast.LENGTH_SHORT).show();
+
+        Intent intent1 = new Intent(context, Main3Activity.class);//直接跳转
+       // intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//动态不需此步
+        context.startActivity(intent1);
+    }
+}
+

@@ -1,6 +1,5 @@
 //接口都有
 http://106.13.63.54:8080/sys/gc.json
-
 //环信官网
 https://www.easemob.com/
 
@@ -11,9 +10,6 @@ https://open.weibo.com/
 https://open.tencent.com/
 https://open.weixin.qq.com/
 https://developer.umeng.com/
-
-
-
 //极光推送
 https://docs.jiguang.cn/jpush/client/Android/android_sdk/
 
@@ -26,7 +22,6 @@ https://docs.jiguang.cn/jpush/client/Android/android_sdk/
 https://github.com/AbrahamCaiJin/CommonUtilLibrary
 //依赖的版本
 https://mvnrepository.com/
-
 
 //史上最全的代码方法：
 https://github.com/AbrahamCaiJin/CommonUtilLibrary
@@ -70,7 +65,16 @@ code 返回的状态码  200表示成功
     @POST("file_upload.php")
     Observable<UploadImage>get(@Part("key") RequestBody key, @Part MultipartBody.Part body);
 ========================================================================================》
+第一个接口：
+https://api.yunxuekeji.cn/yunxue_app_api/content/getData/30/66597/1/10
 
+第二个接口：
+https://api.yunxuekeji.cn/yunxue_app_api/teacher/getTeacherPower/ID
+解释：ID替换成第一个接口中获取得到的ID
+
+默认视频播放地址：
+https://yunxue-bucket.oss-cn-shanghai.aliyuncs.com/classfile/0/从技术走向管理/001.从技术到管理_第1节_从技术到管理的内外部因素.mp4
+================================================================
 
 新实时段子
 https://api.apiopen.top/getJoke?page=1&count=2&type=video

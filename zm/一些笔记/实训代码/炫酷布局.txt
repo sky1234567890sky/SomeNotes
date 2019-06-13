@@ -1,5 +1,24 @@
+
+SwitchCompat是符合谷歌Material design的Selection control组件，与传统的Switch以及ToggleButton不同，v7包中的这个组件兼容了绝大多数低版本手机，令组件的兼容性得到了极大的提升。
+		属性											作用
+showText：true/false	决定是否显示开关按钮上的文字
+splitTrack： true/false 	开关的样式
+switchMinWidth     		开关的最小宽度
+switchPadding				文字和开关的最小距离
+switchTextAppearance	开关文字样式
+thumbTextPadding		文字距两侧的距离
+thumbTint					开关上按钮的颜色
+thumbTintMode			按钮样式
+track								轨道，类似音乐进度条可滑动
+trackTint						轨道颜色
+trackTintMode				轨道样式
+textOff							设置按钮关闭状态显示的文字
+textOn							设置按钮打开状态显示的文字
+thumb	 						引用主题颜色
+》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》
+
 https://blog.csdn.net/qq_15059163/article/details/79960683
-//地址我们的福利
+//以下炫酷布局地址我们的福利
 
 SlideAndDragListView
 支持ListView的Item的拖动排序、左右滑动事件，可自定义左右滑动显示文字、图标、位移，同时支持onItemClick、onItemLongClick等监听器，提供丰富的回调接口。

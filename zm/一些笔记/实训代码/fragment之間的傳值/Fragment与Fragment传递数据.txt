@@ -1,0 +1,19 @@
+ 方法1:通过FragmentManager找到对应Id或者Tag的Framgment,然后获取里面的数据或方法
+FragmentB fragmentById = (FragmentB) getActivity()
+.getSupportFragmentManager()
+.findFragmentById(R.id.fragment_b);
+String data = fragmentById.mData;
+方法2:通过它们所在的Activity作为桥梁,可以使用getActivity()或者接口回调,达到获取另一个Fragment数据的目的.
+
+====================================》
+1.在主界面里Fragment的管理器为每个Fragment添加回退栈，并且必须用替换replce()做；
+例：添加tag标记；
+        beginTransaction.add(R.id.fl,homePageFragment,"home").addToBackStack("home");//A
+        beginTransaction .add(R.id.fl,sourchFragment,"sourch").addToBackStack("sourch");//B
+        
+在AFragment里面向BFragemnt传值：
+在AFragment中：
+//在A里面向B传值。
+ SourchFragment sourch = (SourchFragment) getActivity().getSupportFragmentManager().findFragmentByTag("sourch");
+ sourch.insert("来自HomePage的礼物.......");
+ //

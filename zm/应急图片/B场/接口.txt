@@ -1,0 +1,13 @@
+﻿
+第一个接口：
+https://api.yunxuekeji.cn/yunxue_app_api/content/getData/30/66597/1/10
+
+第二个接口：
+https://api.yunxuekeji.cn/yunxue_app_api/teacher/getTeacherPower/ID
+解释：ID替换成第一个接口中获取得到的ID
+
+默认视频播放地址：
+https://yunxue-bucket.oss-cn-shanghai.aliyuncs.com/classfile/0/从技术走向管理/001.从技术到管理_第1节_从技术到管理的内外部因素.mp4
+
+
+

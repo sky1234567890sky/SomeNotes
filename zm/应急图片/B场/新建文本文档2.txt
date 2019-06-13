@@ -1,0 +1,20 @@
+{
+    "code": 200,
+    "body": {
+        "result": [
+            {
+                "teacherpowerid": "0",
+                "description": "介绍"
+            },
+            {
+                "teacherpowerid": 1,
+                "description": "课程"
+            },
+            {
+                "teacherpowerid": "3",
+                "description": "专题"
+            }
+        ]
+    },
+    "message": "Succes!"
+}

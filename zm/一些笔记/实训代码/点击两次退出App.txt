@@ -1,0 +1,69 @@
+
+//1.
+//实现首次点击返回键提示信息，第二次点击退出应用
+//    代码很简单，在Activity里复写onKeyDown方法，监听到back键的点击就初始化一个时间变量，
+//    并给出一个toast。当接下来一定时间内（我这里取的是1.5秒）再次有点击事件时，退出应用。
+   @SuppressLint("WrongConstant")
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            long secondClickBack  = System.currentTimeMillis();
+            if (secondClickBack  - firstClickBack >1500){
+                Toast.makeText(this, "再按一次退出", 0).show();
+                firstClickBack = secondClickBack;
+                return  true;
+            }else{
+                MyApplication.getInstance().exitApp();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+//2.自定义MyApplication类继承Application；粘贴就行，别忘记注册本类；
+
+private static MyApplication application = null;
+    private static ArrayList<Activity> list ;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        application =this;
+    }
+    //要保证每个Activity中使用的MyApplication都是同一个，就用到了单例模式
+    //单例模式：只有一个对象，也就是上面的那个myApp只实例化一次
+    //由于MyApplication继承自Application，复写的构造函数访问权限不能低于父类的，所以不能为private
+    //所以我们在这里实现一个伪单例模式
+    public static MyApplication getInstance() {
+        if (application==null){
+            application=new MyApplication();
+            list = new ArrayList<Activity>();
+
+        }
+        return application;
+    }
+
+    /**
+     * 添加activity到数组中
+     * @param activity
+     */
+    public void addActivity (Activity activity){
+        list.add(activity);
+    }
+
+    /**
+     * 退出应用，结束所有activity
+     */
+
+    public void exitApp() {
+
+        for (Activity activity : list) {
+            activity.finish();
+        }
+}
+
+
+
+
+
+
+
