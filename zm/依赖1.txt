@@ -26,12 +26,7 @@
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
-
-
-
 android.enableAapt2=false
-
-
 
 //RecyclerView列表/侧滑菜单/TabLayout共用
 implementation 'com.android.support:recyclerview-v7:27.1.1' 
