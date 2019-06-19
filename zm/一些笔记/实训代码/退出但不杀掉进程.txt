@@ -1,0 +1,19 @@
+退出程序，不杀死进程，再次打开程序直接进入刚才执行的页面
+
+相应activity中添加如下代码即可：
+
+@Override ?
+
+? ? public boolean onKeyDown(int keyCode, KeyEvent event) { ?
+
+? ? ? ? if (keyCode == KeyEvent.KEYCODE_BACK) { ?
+
+? ? ? ? ? ? moveTaskToBack(false); ?
+
+? ? ? ? ? ? return true; ?
+
+    } ?
+
+? ? ? ? return super.onKeyDown(keyCode, event); ?
+
+? ? } ?

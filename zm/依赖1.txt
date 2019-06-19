@@ -25,7 +25,7 @@
     //butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-
+//中文名称
 android.enableAapt2=false
 
 //RecyclerView列表/侧滑菜单/TabLayout共用
@@ -66,6 +66,19 @@ annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 implementation 'org.greenrobot:eventbus:3.0.0'
 //硬盘缓存
 compile 'com.jakewharton:disklrucache:2.0.2'
+
+//粘性头布局在项目工程目录里allprojects：添加仓库：maven { url 'https://jitpack.io' }
+implementation 'com.android.support:design:27.1.1'
+implementation 'com.github.qdxxxx:StickyHeaderDecoration:1.0.1'
+
+//流式布局
+//在清单的<application/>元素里面
+tools:replace="android:label
+compile 'com.nex3z:flow-layout:0.1.2'
+
+ //jsoup html解析 爬虫依赖
+    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation files('libs/tbs_sdk_thirdapp_v2.2.0.1096_36549_sharewithdownload_withoutGame_obfs_20160830_211645.jar')
 
 //数据库
 1.工程配置:添加插件
