@@ -1,5 +1,27 @@
 d2j-dex2jar.bat classes.dex
-=========================================
+=======================================
+RecycLerView的网络加载数据多选框错乱问题：
+//适配器中
+  ////1.首先我们要实例化一个SparseBooleanArray,这个集合对象是Android官方自带的，想了解的可以了解一下
+    private SparseBooleanArray sb = new SparseBooleanArray();
+//2.onBindViewHolder（）方法中
+ //在最开始适配的时候，将每一个CheckBox设置一个当前的Tag值，这样每个CheckBox都有了一个固定的标识
+        holder.checked.setTag(position);//打个标记
+//3.在checked的点击事件中：
+  //得到当前CheckBox的Tag值，由于之前保存过，所以不会出现索引错乱
+                int tag = (int) buttonView.getTag();
+                if (isChecked) {
+                    //点击时将当前CheckBox的索引值和Boolean存入SparseBooleanArray中
+                    sb.put(tag, true);
+                } else {
+                    //否则将 当前CheckBox对象从SparseBooleanArray中移除
+                    sb.delete(tag);
+                }
+//3.
+      //得到CheckBox的Boolean值后，将当前索引的CheckBox状态改变
+        holder.checked.setChecked(sb.get(position, false));
+                
+======================================================================
 方法三：传递Bitmap类，实现了Parcelable借口，所以如果想要传递Bitmap对象则可以直接传递过去
 public void onClick(View view) {
         Intent intent = new Intent(this, TwoActivity.class);
@@ -33,12 +55,7 @@ Activity.setOnclick(new Onclick(){
     public void OnclickListener(String s){
         }
     });
---------------------- 
-作者：Maniar 
-来源：CSDN 
-原文：https://blog.csdn.net/qq_41545435/article/details/81408789 
-版权声明：本文为博主原创文章，转载请附上博文链接！
------------------------------------------------------->
+--------------------- ------------------------------------------------------>
 
 <!--这是基础款,没有添加header,和footer,默认使用经典的刷新和加载-->
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
